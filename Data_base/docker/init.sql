@@ -1,104 +1,91 @@
--- Table: appuser
-CREATE TABLE appuser (
+-- Table: user
+CREATE TABLE user (
+    user_id         VARCHAR(255) NOT NULL PRIMARY KEY,
+    libray_id       int,
+    user_name       VARCHAR(255) NOT NULL,
     email           VARCHAR(255) NOT NULL PRIMARY KEY,
+    phone           VARCHAR(10) NOT NULL,
     password        VARCHAR(255) NOT NULL,
-    role            VARCHAR(10) NOT NULL,
+   
     islogin         BOOLEAN DEFAULT FALSE,
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+
+    FOREIGN KEY (libray_id) REFERENCES librays(libray_id) ON DELETE CASCADE
 );
 
--- Table: applicants
-CREATE TABLE applicants (
-    applicant_id    SERIAL PRIMARY KEY,
-    first_name      VARCHAR(255) NOT NULL,
-    last_name       VARCHAR(255) NOT NULL,
-    birth_day       DATE NOT NULL,
+-- Table: amdin
+CREATE TABLE amdin (
+    amdin_id        SERIAL PRIMARY KEY,
+    admin_name      VARCHAR(255) NOT NULL,
     email           VARCHAR(255) NOT NULL UNIQUE,
     phone           VARCHAR(10) NOT NULL,
+    password        VARCHAR(255) NOT NULL,
     created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    -- FOREIGN KEY (first_name, last_name) REFERENCES blacklist(first_name, last_name) ON DELETE CASCADE,
-    FOREIGN KEY (email) REFERENCES appuser(email) ON DELETE CASCADE
+
+    islogin         BOOLEAN DEFAULT FALSE,
+    
 );
 
--- Table: blacklist
-CREATE TABLE blacklist (
-    first_name      VARCHAR(255) NOT NULL,
-    last_name       VARCHAR(255) NOT NULL,
-    birth_day       DATE NOT NULL,
-    email           VARCHAR(255) NOT NULL UNIQUE,
-    history         varchar(500),
-    PRIMARY KEY (first_name, last_name)
+-- Table: company
+CREATE TABLE company (
+    company_id          SERIAL PRIMARY KEY,
+    company_name        VARCHAR(255) NOT NULL,
+    company_email       VARCHAR(255) NOT NULL UNIQUE
 );
 
--- Table: apply
-CREATE TABLE apply (
-    apply_id SERIAL PRIMARY KEY,
-    position VARCHAR(100) NOT NULL,
-    file BYTEA,
-    stage VARCHAR(50) DEFAULT 'สมัครแล้ว',
-    applicant_id INT NOT NULL,
-    FOREIGN KEY (applicant_id) REFERENCES applicants(applicant_id) ON DELETE CASCADE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+-- Table: librays
+CREATE TABLE librays (
+    libray_id       SERIAL PRIMARY KEY,
+    game_id         VARCHAR(100) NOT NULL,
+    created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (game_id) REFERENCES game(game_id) ON DELETE CASCADE
+    
 );
 
--- Table: hr
-CREATE TABLE hr (
-    hr_id           SERIAL PRIMARY KEY,
-    first_name      VARCHAR(255) NOT NULL,
-    last_name       VARCHAR(255),
-    email           VARCHAR(255) NOT NULL UNIQUE,
-    phone           VARCHAR(10) NOT NULL,
+-- Table: game
+CREATE TABLE game (
+    game_id         SERIAL PRIMARY KEY,
+    game_name       VARCHAR(255) NOT NULL,
+    game_type       VARCHAR(255),
+    company_id      VARCHAR(255) NOT NULL UNIQUE,
     created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     
-    FOREIGN KEY (email) REFERENCES appuser(email) ON DELETE CASCADE
+    FOREIGN KEY (company_id) REFERENCES company(company_id) ON DELETE CASCADE
 );
 
--- Table: schedule
-CREATE TABLE schedule (
-    schedule_id SERIAL PRIMARY KEY,
-    first_name VARCHAR(255) NOT NULL,
-    last_name VARCHAR(255),
-    time_s VARCHAR(50) NOT NULL,
-    applicant_id INT NOT NULL,
-    FOREIGN KEY (applicant_id) REFERENCES applicants(applicant_id) ON DELETE CASCADE
+-- Table: bill
+CREATE TABLE bill (
+    bill_id         SERIAL PRIMARY KEY,
+    user_id         VARCHAR(255) NOT NULL,
+    price           float,
+    created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- Trigger function
-CREATE OR REPLACE FUNCTION update_modified_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = now();
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
 
--- Triggers
-CREATE TRIGGER update_applicants_modtime
-BEFORE UPDATE ON applicants
-FOR EACH ROW
-EXECUTE FUNCTION update_modified_column();
+-- Insert user
+INSERT INTO user (user_name, email, password, libray_id, phone) VALUES
+    ('chai', 'somchai@gmail.com', '123', '3', '1'),
+    ('yain',, 'somyain@gmail.com', '456', '4', '1');
 
-CREATE TRIGGER update_apply_modtime
-BEFORE UPDATE ON apply
-FOR EACH ROW
-EXECUTE FUNCTION update_modified_column();
+        amdin_id        SERIAL PRIMARY KEY,
+    
+    admin_name      VARCHAR(255) NOT NULL,
+    email           VARCHAR(255) NOT NULL UNIQUE,
+    phone           VARCHAR(10) NOT NULL,
+    password        VARCHAR(255) NOT NULL,
+    created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 
--- Insert appusers
-INSERT INTO appuser (email, password, role) VALUES
-    ('monnie@gmail.com', '321', 'hr'),
-    ('nnnn@gmail.com', '654', 'hr'),
-    ('somchai@gmail.com', '123', 'applicant'),
-    ('somyain@gmail.com', '456', 'applicant');
+    islogin         BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (libray_id) REFERENCES librays(libray_id) ON DELETE CASCADE
 
--- Insert blacklist (แปลงวันที่เป็น ค.ศ.)
-INSERT INTO blacklist (first_name, last_name, birth_day, email, history) VALUES
-    ('มานี', 'มาแล้ว', '2012-12-20','mani@gmail.com', 'ขโมย'),
-    ('นายนาว', 'เล็กจัด', '1962-05-01','mainow@gmail.com', 'ขโมย'),
-    ('ใบตาล', 'บ้านใหญ่', '2002-07-04','baito@gmail.com', 'ชนแล้วหนึ');
+-- Insert admin
+INSERT INTO admin (first_name, last_name, birth_day, email, history) VALUES
+    ('mon', 'monnie@gmail.com', '321', '1'),
+    ('nee', 'nnnn@gmail.com', '654', '1');
 
 -- Insert HR
 INSERT INTO hr (first_name, last_name, email, phone) VALUES
