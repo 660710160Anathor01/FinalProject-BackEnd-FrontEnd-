@@ -1,6 +1,6 @@
 {
   "proxy": "http://localhost:8080",
-  "name": "car_job_app",
+  "name": "xbox",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
