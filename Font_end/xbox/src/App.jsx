@@ -16,6 +16,7 @@ import HomePage from './pages/User/HomePage';
 import Profile_Page from './pages/User/Profile_Page';
 import Status_Page from './pages/User/Status_Page';
 import NotificationPage from './pages/User/Notification_Page';
+import GamePassPage from './pages/User/GamePassPage';
 
 // HR
 import HomePage_Hr_page from './pages/Hr/Home_Hr_page';
@@ -99,6 +100,15 @@ function App() {
               element={
                 <ProtectedRoute role="applicant">
                   <NotificationPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/user/gamepass"
+              element={
+                <ProtectedRoute role="applicant">
+                  <GamePassPage />
                 </ProtectedRoute>
               }
             />
