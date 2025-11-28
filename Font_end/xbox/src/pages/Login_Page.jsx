@@ -65,25 +65,45 @@ const LoginPage = () => {
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-green-200">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-center text-xl font-semibold text-gray-800 mb-6">
-          เข้าสู่ระบบ
-        </h2>
-        {error && (
-  <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded text-center text-sm">
-    {error}
-  </div>
-)}
+    <div className="min-h-screen bg-green-200 flex flex-col items-center p-6">
 
-<form onSubmit={handleSubmit} className="space-y-4"></form>
+      {/* Title */}
+      <h1 className="text-3xl font-bold mb-10">Qbox's Game Pass</h1>
+
+      <div className="flex w-full max-w-5xl justify-between items-center">
+        {/* Left Panel */}
+        <div
+          className=" w-full max-w-xl mx-auto rounded-3xl p-10 text-center text-white bg-cover bg-center bg-no-repeat"
+          style={{
+          backgroundImage: "url('https://enjoytoread.com/wp-content/uploads/2022/06/Game-to-play-2022.jpg')"
+          }}
+          >
+          <img
+          className="w-40 h-20 object-cover rounded-xl mx-auto mb-6 opacity-0"
+          />
+
+          <h2 className="text-xl font-bold mb-2">YOU WANNA PLAY?</h2>
+          <h1 className="text-4xl font-extrabold">LET'S PLAY!!!</h1>
+
+          <img
+          className="w-40 h-20 object-cover rounded-xl mx-auto mb-6 opacity-0"
+          />
+     </div>
+
+
+        {/* Right Panel */}
+        <div className="w-1/2 pl-10">
+          <h1 className="text-4xl font-extrabold mb-6">WELCOME!</h1>
+
+          <div className="flex flex-col space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4"></form>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email */}
           <div>
             <input
               type="email"
               name="email"
-              placeholder="อีเมล"
+              placeholder="email"
               value={form.email}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400"
@@ -96,7 +116,7 @@ const LoginPage = () => {
             <input
               type={showPassword ? "text" : "password"}
               name="password"
-              placeholder="รหัสผ่าน"
+              placeholder="password"
               value={form.password}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400"
@@ -123,22 +143,25 @@ const LoginPage = () => {
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
-            เข้าสู่ระบบ
+            Login
           </button>
 
           <div className="text-center mt-6 text-gray-600 text-sm">
-            ยังไม่ได้เป็นสมาชิก?{" "}
+          Doesn’t have an account?{" "}
             <Link
               to="/register"
               className="text-purple-500 hover:text-purple-600 font-medium transition"
             >
-              สมัครสมาชิก
+              Sign Up
             </Link>
           </div>
         </form>
+          </div>
+        </div>
       </div>
     </div>
   );
+
 };
 
 export default LoginPage;
