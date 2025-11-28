@@ -12,7 +12,6 @@ const Register_Page = () => {
     phone: "",
     password: "",
     confirmPassword: "",
-    position: ""
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -138,10 +137,10 @@ const Register_Page = () => {
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-purple-200">
+    <div className="flex items-center justify-center min-h-screen bg-green-200">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-center text-xl font-semibold text-gray-800 mb-6">
-          สมัครสมาชิกสำหรับผู้สมัครงาน
+          สมัครสมาชิก
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -244,21 +243,6 @@ const Register_Page = () => {
             />
           </div>
 
-          {/* ตำแหน่ง */}
-          <div>
-            <label className="block text-gray-700 mb-1">ตำแหน่งที่สมัคร</label>
-            <select
-              name="position"
-              value={form.position}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-3 text-gray-700 focus:ring-2 focus:ring-orange-400 focus:outline-none"
-              required
-            >
-              <option value="">-- เลือกตำแหน่ง --</option>
-              <option value="พนักงานบริการ">พนักงานบริการ</option>
-              <option value="พนักงานล้างรถ">พนักงานล้างรถ</option>
-            </select>
-          </div>
 
           {/* Submit Button */}
           <button

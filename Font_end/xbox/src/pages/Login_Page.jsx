@@ -65,10 +65,10 @@ const LoginPage = () => {
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-purple-200">
+    <div className="flex items-center justify-center min-h-screen bg-green-200">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-center text-xl font-semibold text-gray-800 mb-6">
-          เข้าสู่ระบบสำหรับผู้สมัครงาน
+          เข้าสู่ระบบ
         </h2>
         {error && (
   <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded text-center text-sm">
@@ -111,15 +111,7 @@ const LoginPage = () => {
             </button>
           </div>
 
-          {/* Forgot password */}
-          <div className="text-right">
-            <Link
-              to="/forgot-password"
-              className="text-sm text-gray-500 hover:text-orange-500 transition"
-            >
-              ลืมรหัสผ่าน
-            </Link>
-          </div>
+      
 
           {/* Submit Button */}
           <button
