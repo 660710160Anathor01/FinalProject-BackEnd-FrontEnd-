@@ -1,6 +1,6 @@
 services:
   fontend:
-      build: ./car_job_app
+      build: ./xbox
       ports:
         - "3001:80"
       restart: unless-stopped
