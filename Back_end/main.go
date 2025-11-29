@@ -125,15 +125,12 @@ func getAppUserAuthen(c *gin.Context) {
     fmt.Println("✅ Password:", appuser.Password)
 
     var role string
-    err := db.QueryRow("SELECT user_id FROM appuser WHERE email=$1 AND password=$2", appuser.Email, appuser.Password).Scan(&appuser.UserID)
+    
+    err := db.QueryRow("SELECT user_id FROM app_user WHERE email=$1 AND password=$2", appuser.Email, appuser.Password).Scan(&appuser.UserID)
+    
     if err != nil {
-
-        if err := c.ShouldBindJSON(&admin); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        fmt.Println("❌ JSON binding error:", err.Error())
-        return
-        }
-            err := db.QueryRow("SELECT admin_id FROM admin WHERE email=$1 AND password=$2", admin.Email, admin.Password).Scan(&admin.AdminID)
+           
+            err := db.QueryRow("SELECT admin_id FROM admin WHERE email=$1 AND password=$2", appuser.Email, appuser.Password).Scan(&admin.AdminID)         
             if err != nil {
                 fmt.Println("❌ QueryRow error:", err)
                 c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่พบผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง"})
@@ -143,25 +140,26 @@ func getAppUserAuthen(c *gin.Context) {
     }
 
     var result sql.Result
-
-    if role != ""{
+    
+    if role == ""{
         role = "user"
         result,err = db.Exec(`
-        UPDATE appuser 
+        UPDATE app_user 
         SET islogin = TRUE 
         WHERE email = $1 AND password = $2
     `, appuser.Email, appuser.Password)
-    }else{
+   
+
+    }else if role == "admin"{
         result,err = db.Exec(`
         UPDATE admin 
         SET islogin = TRUE 
         WHERE email = $1 AND password = $2
-    `, admin.Email, admin.Password)
+    `, appuser.Email, appuser.Password)
+ 
     }
 
     
-    
-
     if err != nil {
         fmt.Println("❌ SQL Update error:", err)
         c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่สามารถอัพเดตสถานะการล็อกอินได้"})
@@ -176,7 +174,7 @@ func getAppUserAuthen(c *gin.Context) {
     }
 
     if rowsAffected == 0 {
-        fmt.Println("❌ No rows updated")
+        fmt.Println("❌ No rows updated:", err, rowsAffected)
         c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่สามารถอัพเดตสถานะการล็อกอินได้"})
         return
     }
