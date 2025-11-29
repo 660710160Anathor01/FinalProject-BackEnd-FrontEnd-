@@ -81,13 +81,28 @@ INSERT INTO company (company_name, company_email) VALUES
 ('Riot Games', 'riot@example.com'),
 ('Infinity Ward / Activision', 'activision@example.com'),
 ('Nintendo', 'nintendo@example.com'),
-('Santa Monica Studio (Sony Interactive Entertainment)', 'sony@example.com'),
-('CD Projekt Red', 'cdprojekt@example.com'),
-('FromSoftware (Bandai Namco)', 'fromsoftware@example.com'),
-('PUBG Studios (Krafton)', 'pubg@example.com');
+('Santa Monica Studio (Sony)', 'santamonica@example.com'),
+('CD Projekt Red', 'cdpr@example.com'),
+('FromSoftware', 'fromsoftware@example.com'),
+('Krafton / PUBG Studios', 'krafton@example.com'),
+('Respawn Entertainment', 'respawn@example.com'),
+('Blizzard Entertainment', 'blizzard@example.com'),
+('Valve Corporation', 'valve@example.com'),
+('Guerrilla Games', 'guerrilla@example.com'),
+('Ubisoft Montreal', 'ubisoftmontreal@example.com'),
+('Ubisoft Toronto', 'ubisofttoronto@example.com'),
+('HoYoverse (miHoYo)', 'hoyoverse@example.com'),
+('DICE (EA)', 'dice@example.com'),
+('Naughty Dog', 'naughtydog@example.com'),
+('Capcom', 'capcom@example.com'),
+('Innersloth', 'innersloth@example.com'),
+('343 Industries (Xbox)', 'xbox343@example.com'),
+('Eidos-Montréal', 'eidos@example.com'),
+('Kojima Productions', 'kojima@example.com');
+
 
 INSERT INTO game (game_id, game_name, game_type, icon, company_id) VALUES
-('1', 'Grand Theft Auto V (GTA V)', 'Action', 'https://upload.wikimedia.org/wikipedia/th/thumb/c/cc/Grand_Theft_Auto_V_Cover.png/250px-Grand_Theft_Auto_V_Cover.png', 1),
+('1','Grand Theft Auto V (GTA V)', 'Action', 'https://upload.wikimedia.org/wikipedia/th/thumb/c/cc/Grand_Theft_Auto_V_Cover.png/250px-Grand_Theft_Auto_V_Cover.png', 1),
 ('2','Minecraft', 'Sandbox', 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b6/Minecraft_2024_cover_art.png/250px-Minecraft_2024_cover_art.png', 2),
 ('3','Fortnite', 'Battle Royale', 'https://cdn2.unrealengine.com/fneco-2025-keyart-thumb-1920x1080-de84aedabf4d.jpg', 3),
 ('4','League of Legends (LoL)', 'MOBA', 'https://cdn1.epicgames.com/offer/24b9b5e323bc40eea252a10cdd3b2f10/EGS_LeagueofLegends_RiotGames_S1_2560x1440-47eb328eac5ddd63ebd096ded7d0d5ab', 4),
@@ -96,7 +111,29 @@ INSERT INTO game (game_id, game_name, game_type, icon, company_id) VALUES
 ('7','God of War (2018)', 'Action', 'https://image.api.playstation.com/vulcan/img/rnd/202010/2217/LsaRVLF2IU2L1FNtu9d3MKLq.jpg', 7),
 ('8','Cyberpunk 2077', 'RPG', 'https://upload.wikimedia.org/wikipedia/en/9/9f/Cyberpunk_2077_box_art.jpg', 8),
 ('9','Elden Ring', 'RPG', 'https://image.api.playstation.com/vulcan/ap/rnd/202108/0410/UAnLUUMdxA9cow8TEe8IfhuC.png', 9),
-('10','PUBG: Battlegrounds', 'Battle Royale', 'https://cdn1.epicgames.com/spt-assets/53ec4985296b4facbe3a8d8d019afba9/pubg-battlegrounds-19vwb.jpg', 10);
+('10','PUBG: Battlegrounds', 'Battle Royale', 'https://cdn1.epicgames.com/spt-assets/53ec4985296b4facbe3a8d8d019afba9/pubg-battlegrounds-19vwb.jpg', 10),
+('11','Apex Legends', 'Battle Royale', 'https://upload.wikimedia.org/wikipedia/th/d/db/Apex_legends_cover.jpg', 11),
+('12','Overwatch 2', 'Shooter', 'https://upload.wikimedia.org/wikipedia/en/8/89/Overwatch_2_Steam_artwork.jpg', 12),
+('13','Dota 2', 'MOBA', 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/capsule_616x353.jpg?t=1762820658', 13),
+('14','Counter-Strike 2 (CS2)', 'Shooter', 'https://cdn.fastly.steamstatic.com/apps/csgo/images/csgo_react/social/cs2.jpg', 13),
+('15','The Witcher 3: Wild Hunt', 'RPG', 'https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/Witcher_3_cover_art.jpg/250px-Witcher_3_cover_art.jpg', 8),
+('16','Red Dead Redemption 2', 'Action Adventure', 'https://upload.wikimedia.org/wikipedia/th/4/44/Red_Dead_Redemption_II.jpg', 1),
+('17','Horizon Forbidden West', 'Action RPG', 'https://upload.wikimedia.org/wikipedia/en/thumb/6/69/Horizon_Forbidden_West_cover_art.jpg/250px-Horizon_Forbidden_West_cover_art.jpg', 14),
+('18','Assassin’s Creed Valhalla', 'Action RPG', 'https://upload.wikimedia.org/wikipedia/en/thumb/f/ff/Assassins_Creed_Valhalla_cover.jpg/250px-Assassins_Creed_Valhalla_cover.jpg', 15),
+('19','Far Cry 6', 'Shooter', 'https://upload.wikimedia.org/wikipedia/en/3/35/Far_cry_6_cover.jpg', 16),
+('20','Genshin Impact', 'Action RPG', 'https://fastcdn.hoyoverse.com/content-v2/plat/124031/5d2ba4371115d26de4c574b28311aed8_3908500551050520494.jpeg', 17),
+('21','Battlefield 2042', 'Shooter', 'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Battlefield_2042_cover_art.jpg/250px-Battlefield_2042_cover_art.jpg', 18),
+('22','The Last of Us Part II', 'Action Adventure', 'https://image.api.playstation.com/vulcan/img/rnd/202010/2618/w48z6bzefZPrRcJHc7L8SO66.png', 19),
+('23','Resident Evil Village', 'Horror', 'https://upload.wikimedia.org/wikipedia/en/2/2c/Resident_Evil_Village.png', 20),
+('24','Monster Hunter: World', 'Action RPG', 'https://upload.wikimedia.org/wikipedia/en/1/1b/Monster_Hunter_World_cover_art.jpg', 20),
+('25','Among Us', 'Party / Social Deduction', 'https://upload.wikimedia.org/wikipedia/en/9/9a/Among_Us_cover_art.jpg', 21),
+('26','Halo Infinite', 'Shooter', 'https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Halo_Infinite.png/250px-Halo_Infinite.png', 22),
+('27','Shadow of the Tomb Raider', 'Action Adventure', 'https://upload.wikimedia.org/wikipedia/en/thumb/1/11/Shadow_of_the_Tomb_Raider_cover.png/250px-Shadow_of_the_Tomb_Raider_cover.png', 23),
+('28','Death Stranding', 'Action', 'https://upload.wikimedia.org/wikipedia/en/2/22/Death_Stranding.jpg', 24),
+('29','Sekiro: Shadows Die Twice', 'Action Adventure', 'https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/Sekiro_art.jpg/250px-Sekiro_art.jpg', 9),
+('30','Diablo IV', 'Action RPG', 'https://image.api.playstation.com/vulcan/ap/rnd/202211/3017/Oo1B84A7BLCT157YFSxjtwG0.png', 12);
+
+
 
 INSERT INTO library (game_id, downloaded) VALUES
     ('1-2-3-5','2-3-5'),
