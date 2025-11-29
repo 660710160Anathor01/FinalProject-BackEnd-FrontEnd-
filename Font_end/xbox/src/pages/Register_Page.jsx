@@ -38,31 +38,8 @@ const Register_Page = () => {
     setIsSubmitting(true);
 
     try {
-      // แปลงวันเกิดเป็น ISO string
-      const birthDayISO = new Date(form.birth_day).toISOString();
-
-      const blacklistRes = await fetch("http://localhost:8080/api/v1/blacklist", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          first_name: form.first_name,
-          last_name: form.last_name,
-        }),
-      });
-
-      if (!blacklistRes.ok) {
-        if (blacklistRes.status === 403) {
-          alert("คุณถูกบล็อคโดย Blacklist ไม่สามารถสมัครได้");
-          setIsSubmitting(false);
-          return;
-        }
-        throw new Error("เกิดข้อผิดพลาดในการตรวจสอบ Blacklist");
-      }
-
-      // 2. สมัคร user
-      const appUserRes = await fetch("http://localhost:8080/api/v1/appuser", {
+      
+      const appUserRes = await fetch("http://localhost:8080/api/v1/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +47,9 @@ const Register_Page = () => {
         body: JSON.stringify({
           email: form.email,
           password: form.password,
-          role: "applicant",
+          user_name: form.user_name,
+          phone: form.phone,
+          email: form.email,
         }),
       });
 
@@ -79,46 +58,7 @@ const Register_Page = () => {
       }
 
       const appUserData = await appUserRes.json();
-
-      // 3. สมัคร applicant
-      const applicantRes = await fetch("http://localhost:8080/api/v1/applicant", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          first_name: form.first_name,
-          last_name: form.last_name,
-          birth_day: birthDayISO,
-          phone: form.phone,
-          email: form.email,
-        }),
-      });
-
-      if (!applicantRes.ok) {
-        throw new Error("สมัคร applicant ไม่สำเร็จ");
-      }
-
-      const applicantData = await applicantRes.json();
-      console.log(applicantData.applicant_id)
-
-      // 4. สมัคร apply (ใบสมัคร)
-      const applyRes = await fetch("http://localhost:8080/api/v1/apply", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          position: form.position,
-          applicant_id: applicantData.applicant_id,
-
-        }),
-      });
-
-      if (!applyRes.ok) {
-        throw new Error("สมัคร apply ไม่สำเร็จ");
-      }
-
+      
       alert("สมัครสมาชิกสำเร็จ!");
       navigate("/"); // ไปหน้า login
 

@@ -32,7 +32,8 @@ type Game struct {
 
 type Library struct {
 	LibraryID       int       	`json:"library_id"`
-	GameID 	        int    	    `json:"game_id"`
+	GameID 	        string 	    `json:"game_id"`
+    Downloaded      string      `json:"downloaded"`
 	CreatedAt 	    time.Time 	`json:"created_at"`
 	
 }
@@ -422,6 +423,39 @@ func updateGame(c *gin.Context) {
     c.JSON(http.StatusOK, updateGame)
 }
 
+func updateLibrary(c *gin.Context) {
+    idParam := c.Param("id")
+    id, err := strconv.Atoi(idParam)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+        return
+    }
+
+    var updateLibrary Library
+    if err := c.ShouldBindJSON(&updateLibrary); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    _, err = db.Exec(
+        `UPDATE library
+         SET game_id = $1, download = $2
+         WHERE library_id = $3
+         `,
+        updateLibrary.GameID, updateLibrary.Downloaded, id,
+    )
+
+    if err == sql.ErrNoRows {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Librery not found"})
+        return
+    } else if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    updateLibrary.LibraryID = id
+    c.JSON(http.StatusOK, updateLibrary)
+}
 //=========================================================================================================================================================================================
 // Create
 //=========================================================================================================================================================================================
@@ -435,23 +469,40 @@ func createAppUser(c *gin.Context) {
         return
     }
 
-    var id int
-    var payment_date time.Time
-   
+    var id, library_id int
+    var payment_date, created_at time.Time
+    fmt.Println("1")
+
     err := db.QueryRow(
-        `INSERT INTO app_user (library_id, user_name, phone, email, password)
+        `INSERT INTO library (game_id, downloaded)
+        VALUES ($1, $2)
+        RETURNING library_id`,
+        "", "").Scan(&library_id)
+    fmt.Println("2")
+    
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    err = db.QueryRow(
+        `INSERT INTO app_user ( library_id, user_name, phone, email, password)
          VALUES ($1, $2, $3, $4, $5)
-         RETURNING user_id, payment_date`,
-        newAppUser.LibraryID, newAppUser.UserName, newAppUser.Phone, newAppUser.Email, newAppUser.Password,
-    ).Scan(&id, &payment_date)
+         RETURNING user_id, payment_date, created_at`,
+        library_id, newAppUser.UserName, newAppUser.Phone, newAppUser.Email, newAppUser.Password,
+    ).Scan(&id, &payment_date, &created_at)
+    fmt.Println("3", err)
 
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
+    fmt.Println("4")
+     
     newAppUser.UserID = id
-    newAppUser.PaymentDate = payment_date
-
+    newAppUser.LibraryID = library_id
+    newAppUser.PaymentDate = created_at
+    newAppUser.CreatedAt = created_at
 
     c.JSON(http.StatusCreated, newAppUser)
 }
@@ -530,7 +581,6 @@ func main(){
 	r := gin.Default()    
     
 
-    //r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
     r.Use(cors.New(cors.Config{
        AllowOrigins:     []string{
@@ -579,6 +629,7 @@ func main(){
 	 	api.DELETE("/game/:id", deleteGame)
         
         api.GET("/library/:id", getLibrary)
+        api.PUT("/library/:id", updateLibrary)
    
         
     }
