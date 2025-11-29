@@ -22,7 +22,7 @@ const Navbar = () => {
                                         }`
                                    }
                               >
-                                   หน้าแรก
+                                   Home
                               </NavLink>
                          </div>
 
@@ -35,7 +35,7 @@ const Navbar = () => {
                                         }`
                                    }
                               >
-                                   เข้าสู่ระบบ
+                                   Login
                               </NavLink>
                               <NavLink
                                    to="/register"
@@ -44,7 +44,7 @@ const Navbar = () => {
                                         }`
                                    }
                               >
-                                   สมัครสมาชิก
+                                   Sign up
                               </NavLink>
                          </div>
                     </div>

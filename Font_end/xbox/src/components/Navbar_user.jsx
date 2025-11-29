@@ -65,7 +65,7 @@ const Navbar_user = () => {
                 }`
               }
             >
-              แจ้งเตือน
+              Notifications
             </NavLink>
 
             <NavLink 
