@@ -19,18 +19,16 @@ export default function GameDetail() {
         const data = await res.json();
         if (mounted) {
           setGame(data || null);
-          setLoading(false);
+          // setLoading(false);
         }
         
-        
-          // const companyRes = await fetch(`http://127.0.0.1:8080/api/v1/company/${data.company_id}`);
-          // if (!companyRes.ok) throw new Error("Failed to fetch company");
-          // const companyData = await companyRes.json();
-          // if (mounted) {
-          //   setCompany(companyData || null);
-          //   setLoading(false);
-          // }
-
+          const companyRes = await fetch(`http://127.0.0.1:8080/api/v1/company/${data.company_id}`);
+          if (!companyRes.ok) throw new Error("Failed to fetch company");
+          const companyData = await companyRes.json();
+          if (mounted) {
+            setCompany(companyData || null);
+            setLoading(false);
+          }
 
       } catch (error) {
         console.error(error);
@@ -70,9 +68,9 @@ export default function GameDetail() {
           <h2 className="text-2xl font-bold mb-2">{game.game_name}</h2>
 
           <div className="text-gray-300 mb-4">
-            <p><strong>Developer:</strong> {game.company_name}</p>
+            <p><strong>Developer:</strong> {company.company_name}</p>
             <p><strong>Category:</strong> {game.game_type}</p>
-            <p><strong>Updated:</strong> {game.updated}</p>
+            <p><strong>Updated:</strong> {game.updated_at}</p>
           </div>
 
           <div className="mt-6">

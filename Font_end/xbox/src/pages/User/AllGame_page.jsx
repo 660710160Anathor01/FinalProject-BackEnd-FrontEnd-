@@ -48,6 +48,7 @@ export default function AllGame() {
         {filteredGames.map((game) => (
           <GameCard
             key={game.id}
+            id={game.id}
             title={game.game_name}
             image={game.icon}
             updated={game.updated}

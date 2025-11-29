@@ -71,6 +71,7 @@ export default function Home() {
         {filteredGames.map((game) => (
           <GameItem
             key={game.id}
+            id={game.id}
             title={game.game_name}
             category={game.game_type}
             image={game.icon}
