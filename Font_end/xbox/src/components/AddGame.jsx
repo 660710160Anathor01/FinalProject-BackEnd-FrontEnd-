@@ -101,7 +101,7 @@ const AddGame = () => {
       {/* Main */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto bg-white p-8 shadow-lg rounded-xl">
-          <h2 className="text-3xl font-bold mb-6">เพิ่มเกมใหม่</h2>
+          <h2 className="text-3xl font-bold mb-6 text-black">ADD NEW GAME</h2>
 
           {successMessage && (
             <div className="bg-green-50 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-4">
@@ -118,61 +118,61 @@ const AddGame = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
 
             <div>
-              <label className="block mb-1">Game ID</label>
+              <label className="block mb-1 text-black">Game ID</label>
               <input
                 type="text"
                 name="game_id"
                 value={formData.game_id}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-lg"
+                className="w-full px-4 py-3 border rounded-lg text-black"
               />
               {errors.game_id && <p className="text-red-500 text-sm">{errors.game_id}</p>}
             </div>
 
             <div>
-              <label className="block mb-1">ชื่อเกม</label>
+              <label className="block mb-1 text-black">NAME GAME</label>
               <input
                 type="text"
                 name="game_name"
                 value={formData.game_name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-lg"
+                className="w-full px-4 py-3 border rounded-lg text-black"
               />
               {errors.game_name && <p className="text-red-500 text-sm">{errors.game_name}</p>}
             </div>
 
             <div>
-              <label className="block mb-1">ประเภทเกม</label>
+              <label className="block mb-1 text-black">Game Type</label>
               <input
                 type="text"
                 name="game_type"
                 value={formData.game_type}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-lg"
+                className="w-full px-4 py-3 border rounded-lg text-black"
               />
               {errors.game_type && <p className="text-red-500 text-sm">{errors.game_type}</p>}
             </div>
 
             <div>
-              <label className="block mb-1">ไอคอน (URL)</label>
+              <label className="block mb-1 text-black">ICON (URL)</label>
               <input
                 type="text"
                 name="icon"
                 value={formData.icon}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-lg"
+                className="w-full px-4 py-3 border rounded-lg text-black"
               />
               {errors.icon && <p className="text-red-500 text-sm">{errors.icon}</p>}
             </div>
 
             <div>
-              <label className="block mb-1">บริษัท (ID)</label>
+              <label className="block mb-1 text-black">COMPANY (ID)</label>
               <input
                 type="text"
                 name="company_id"
                 value={formData.company_id}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-lg"
+                className="w-full px-4 py-3 border rounded-lg text-black"
               />
               {errors.company_id && <p className="text-red-500 text-sm">{errors.company_id}</p>}
             </div>
@@ -182,7 +182,7 @@ const AddGame = () => {
               disabled={isSubmitting}
               className="w-full py-3 bg-green-600 text-white rounded-lg"
             >
-              {isSubmitting ? "กำลังบันทึก..." : "เพิ่มเกม"}
+              {isSubmitting ? "SAVING..." : "ADD GAME"}
             </button>
 
           </form>
