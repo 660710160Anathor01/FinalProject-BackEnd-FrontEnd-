@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar_user from './components/Navbar_user';
 import Navbar_admin from './components/Navbar_admin';
 import Navbar from './components/Navbar';
+import EditGamePage from './components/EditGamePage';
 
 // Pages
 import Login_Page from './pages/Login_Page';
@@ -173,6 +174,15 @@ function App() {
               element={
                 <ProtectedRoute role="admin">
                   <HomePage_NotLog/>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/edit/:id"
+              element={
+                <ProtectedRoute role="admin">
+                  <EditGamePage/>
                 </ProtectedRoute>
               }
             />

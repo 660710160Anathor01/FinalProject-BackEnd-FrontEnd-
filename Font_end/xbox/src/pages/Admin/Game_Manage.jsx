@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import AddGame from "../../components/AddGame";
 import ConfirmDelete from "../../components/ConfirmDelete"; // ⭐ เพิ่มตรงนี้
 
@@ -108,7 +108,7 @@ export default function Game_Manage() {
                 <td className="px-4 py-4 whitespace-nowrap">{game.company}</td>
                 <td className="px-4 py-4 whitespace-nowrap">{game.email}</td>
                 <td className="px-4 py-4 whitespace-nowrap">
-                  <button className="text-blue-600 hover:underline">Edit</button></td>
+                  <button className="text-blue-600 hover:underline"><NavLink to ={`/admin/edit/${game.id}`}>Edit</NavLink></button></td>
                 <td className="px-4 py-4 whitespace-nowrap">
                 
                   <button className="text-red-600 hover:underline"
