@@ -9,7 +9,8 @@ export default function AdminProfile() {
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  
+  
   useEffect(() => {
     let mounted = true;
 
