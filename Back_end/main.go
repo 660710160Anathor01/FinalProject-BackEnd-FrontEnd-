@@ -112,6 +112,80 @@ func initDB(){
 	db.SetConnMaxLifetime(5 * time.Minute)
 }
 
+func getAppUserAuthen(c *gin.Context) {
+    var appuser AppUser
+    var admin Admin
+    if err := c.ShouldBindJSON(&appuser); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        fmt.Println("❌ JSON binding error:", err.Error())
+        return
+    }
+
+    fmt.Println("✅ Email:", appuser.Email)
+    fmt.Println("✅ Password:", appuser.Password)
+
+    var role string
+    err := db.QueryRow("SELECT user_id FROM appuser WHERE email=$1 AND password=$2", appuser.Email, appuser.Password).Scan(&appuser.UserID)
+    if err != nil {
+
+        if err := c.ShouldBindJSON(&admin); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        fmt.Println("❌ JSON binding error:", err.Error())
+        return
+        }
+            err := db.QueryRow("SELECT admin_id FROM admin WHERE email=$1 AND password=$2", admin.Email, admin.Password).Scan(&admin.AdminID)
+            if err != nil {
+                fmt.Println("❌ QueryRow error:", err)
+                c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่พบผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง"})
+                return
+            }       
+        role = "admin"
+    }
+
+    var result sql.Result
+
+    if role != ""{
+        role = "user"
+        result,err = db.Exec(`
+        UPDATE appuser 
+        SET islogin = TRUE 
+        WHERE email = $1 AND password = $2
+    `, appuser.Email, appuser.Password)
+    }else{
+        result,err = db.Exec(`
+        UPDATE admin 
+        SET islogin = TRUE 
+        WHERE email = $1 AND password = $2
+    `, admin.Email, admin.Password)
+    }
+
+    
+    
+
+    if err != nil {
+        fmt.Println("❌ SQL Update error:", err)
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่สามารถอัพเดตสถานะการล็อกอินได้"})
+        return
+    }
+
+    rowsAffected, err := result.RowsAffected()
+    if err != nil {
+        fmt.Println("❌ RowsAffected error:", err)
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่สามารถตรวจสอบผลลัพธ์ของการอัพเดตได้"})
+        return
+    }
+
+    if rowsAffected == 0 {
+        fmt.Println("❌ No rows updated")
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่สามารถอัพเดตสถานะการล็อกอินได้"})
+        return
+    }
+
+    fmt.Println("✅ Role:", role)
+
+    c.JSON(http.StatusOK, gin.H{"role": role})
+}
+
 //=========================================================================================================================================================================================
 // Get
 //=========================================================================================================================================================================================
@@ -229,7 +303,7 @@ func getCompany(c *gin.Context) {
     id := c.Param("id")
     var company Company
 
-    err := db.QueryRow("SELECT company_id, company_name, email FROM company WHERE company_id = $1", id).
+    err := db.QueryRow("SELECT company_id, company_name, company_email FROM company WHERE company_id = $1", id).
         Scan(&company.CompanyID, &company.CompanyName, &company.Email)
 
     if err == sql.ErrNoRows {
@@ -494,7 +568,7 @@ func main(){
 
         api.GET("/company/:id", getCompany)
         api.GET("/bill/:id", getBill)
-        //api.POST("/user/auth", getAppUserAuthen)
+        api.POST("/user/auth", getAppUserAuthen)
 	 	//api.DELETE("/user/:id", deleteApplicant)
         //api.GET("/user/profile", getApplicantProfile)
 
