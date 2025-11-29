@@ -134,7 +134,7 @@ const EditGamePage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-8">
 
-          <h2 className="text-3xl font-bold mb-6 text-gray-900">แก้ไขข้อมูลเกม</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-900">Edit Game Data</h2>
 
           {successMessage && (
             <div className="mb-6 bg-green-50 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
@@ -151,7 +151,7 @@ const EditGamePage = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
 
             <div>
-              <label className="block font-medium mb-1">ชื่อเกม</label>
+              <label className="block font-medium mb-1">NAME GAME</label>
               <input
                 type="text"
                 name="game_name"
@@ -163,7 +163,7 @@ const EditGamePage = () => {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">ประเภทเกม</label>
+              <label className="block font-medium mb-1">GAME TYPE</label>
               <input
                 type="text"
                 name="game_type"
@@ -201,9 +201,9 @@ const EditGamePage = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 bg-viridian-600 text-white rounded-lg"
+              className="w-full py-3 bg-green-600 text-black rounded-lg"
             >
-              {isSubmitting ? 'กำลังบันทึก...' : 'บันทึกการแก้ไข'}
+              {isSubmitting ? 'SAVING...' : 'SAVE Edit GAME'}
             </button>
 
           </form>
