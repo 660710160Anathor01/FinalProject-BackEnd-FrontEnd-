@@ -93,7 +93,7 @@ function App() {
               }
             />
             
-          <Route path="user/library/game/:id" element={<GameDetail />} />
+          <Route path="user/library/:id/game/:id" element={<GameDetail />} />
           <Route path="user/games/game/:id" element={<GameDetail />} />
           <Route path="user/game/:id" element={<GameDetail />} />
             <Route
