@@ -26,7 +26,7 @@ const EditGamePage = () => {
     const loadGame = async () => {
       try {
         const res = await fetch(`/api/v1/game/${id}`);
-        if (!res.ok) throw new Error("ไม่พบข้อมูลเกม");
+        if (!res.ok) throw new Error("Not found");
 
         const data = await res.json();
         setFormData({
@@ -59,10 +59,10 @@ const EditGamePage = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.game_name.trim()) newErrors.game_name = "กรุณากรอกชื่อเกม";
-    if (!formData.game_type.trim()) newErrors.game_type = "กรุณากรอกประเภทเกม";
-    if (!formData.icon.trim()) newErrors.icon = "กรุณากรอก URL icon";
-    if (!formData.company_id.trim()) newErrors.company_id = "กรุณากรอก company_id";
+    if (!formData.game_name.trim()) newErrors.game_name = "Enter game name";
+    if (!formData.game_type.trim()) newErrors.game_type = "Enter game type";
+    if (!formData.icon.trim()) newErrors.icon = "Enter URL icon";
+    if (!formData.company_id.trim()) newErrors.company_id = "Enter company_id";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -88,9 +88,9 @@ const EditGamePage = () => {
         })
       });
 
-      if (!res.ok) throw new Error("แก้ไขข้อมูลเกมไม่สำเร็จ");
+      if (!res.ok) throw new Error("INCOMPLETE");
 
-      setSuccessMessage("บันทึกข้อมูลสำเร็จ!");
+      setSuccessMessage("COMPLETE!");
 
       setTimeout(() => navigate('/'), 2000);
 
@@ -107,7 +107,7 @@ const EditGamePage = () => {
   };
 
   if (loading) {
-    return <div className="text-center p-8 text-lg">กำลังโหลดข้อมูล...</div>;
+    return <div className="text-center p-8 text-lg">loading...</div>;
   }
 
   return (
@@ -125,7 +125,7 @@ const EditGamePage = () => {
               className="flex items-center space-x-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
             >
               <LogoutIcon className="h-5 w-5" />
-              <span>ออกจากระบบ</span>
+              <span>Logout</span>
             </button>
           </div>
         </div>

@@ -33,11 +33,11 @@ const AddGame = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.game_id.trim()) newErrors.game_id = "กรุณากรอก Game ID";
-    if (!formData.game_name.trim()) newErrors.game_name = "กรุณากรอกชื่อเกม";
-    if (!formData.game_type.trim()) newErrors.game_type = "กรุณากรอกประเภทเกม";
-    if (!formData.icon.trim()) newErrors.icon = "กรุณากรอกลิงก์ไอคอน";
-    if (!formData.company_id.trim()) newErrors.company_id = "กรุณากรอกบริษัท";
+    if (!formData.game_id.trim()) newErrors.game_id = "Enter Game ID";
+    if (!formData.game_name.trim()) newErrors.game_name = "Enter game name";
+    if (!formData.game_type.trim()) newErrors.game_type = "Enter game type";
+    if (!formData.icon.trim()) newErrors.icon = "Enter URL icon";
+    if (!formData.company_id.trim()) newErrors.company_id = "Enter company id";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -64,9 +64,9 @@ const AddGame = () => {
         })
       });
 
-      if (!res.ok) throw new Error("เพิ่มเกมไม่สำเร็จ");
+      if (!res.ok) throw new Error("INCOMPLETE");
 
-      setSuccessMessage("เพิ่มเกมสำเร็จ!");
+      setSuccessMessage("COMPLETE!");
 
       // เคลียร์ฟอร์ม
       setFormData({

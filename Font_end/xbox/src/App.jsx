@@ -25,7 +25,7 @@ import AllGame from './pages/User/AllGame_page';
 import Library from './pages/User/Library_page';
 import GameDetail from './pages/User/GameDetail';
 import Help from './pages/User/Help_page';
-import AdminProfile from './pages/User/AdminProfile_page';
+import AdminProfile from './pages/Admin/AdminProfile_page';
 import BillTemplate from './pages/User/bill';
 
 // admin
@@ -33,6 +33,7 @@ import Game_Manage from './pages/Admin/Game_Manage.jsx';
 
 
 import { useAuth } from './contexts/AuthContext'; // 👈 ย้อนขึ้นไปหา contexts
+
 
 
 function ProtectedRoute({ children, role }) {
@@ -122,7 +123,8 @@ function App() {
               }
             />
             <Route path="/admin/:id" element={<AdminProfile />} />
-            
+
+
             <Route
               path="/user/notification"
               element={

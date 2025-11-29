@@ -23,7 +23,7 @@ const LoginPage = () => {
     setError("");
 
     if (!isFormValid()) {
-      setError("กรุณากรอกข้อมูลให้ครบถ้วน");
+      setError("INCOMPLETE");
       return;
     }
 
@@ -37,7 +37,7 @@ const LoginPage = () => {
       });
 
       if (!response.ok) {
-        setError("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+        setError("Not found user");
         return;
       }
 
@@ -53,7 +53,7 @@ const LoginPage = () => {
         isLoggedIn: true,
         role: role,
         email: form.email,
-        id: userId
+        id: userId,
       });
 
       if (role === "hr") {
