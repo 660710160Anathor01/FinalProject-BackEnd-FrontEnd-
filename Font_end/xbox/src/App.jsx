@@ -12,11 +12,18 @@ import Register_Page from './pages/Register_Page';
 import HomePage_NotLog from './pages/HomePage_NotLog';
 
 // User
-import HomePage from './pages/User/HomePage';
+import Home from './pages/User/Home_page';
+//import HomePage from './pages/User/HomePage';
 import Profile_Page from './pages/User/Profile_Page';
+
 import Status_Page from './pages/User/Status_Page';
 import NotificationPage from './pages/User/Notification_Page';
+
 import GamePassPage from './pages/User/GamePassPage';
+import Payment from './pages/User/Payment_page';
+import AllGame from './pages/User/AllGame_page';
+import Library from './pages/User/Library_page';
+import GameDetail from './pages/User/GameDetail';
 
 // HR
 import HomePage_Hr_page from './pages/Hr/Home_Hr_page';
@@ -75,10 +82,21 @@ function App() {
               path="/user"
               element={
                 <ProtectedRoute role="applicant">
-                  <HomePage />
+                  <Home />
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/user/games"
+              element={
+                <ProtectedRoute role="applicant">
+                  <AllGame />
+                </ProtectedRoute>
+              }
+            />
+            
+          <Route path="user/library/games/:id" element={<GameDetail />} />
+
             <Route
               path="/user/profile"
               element={
@@ -88,10 +106,10 @@ function App() {
               }
             />
             <Route
-              path="/user/status"
+              path="/user/library"
               element={
                 <ProtectedRoute role="applicant">
-                  <Status_Page />
+                  <Library />
                 </ProtectedRoute>
               }
             />
@@ -112,6 +130,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/user/payment"
+              element={
+                <ProtectedRoute role="applicant">
+                  <Payment />
+                </ProtectedRoute>
+              }
+            />
+
 
             {/* หน้า hr */}
             <Route
