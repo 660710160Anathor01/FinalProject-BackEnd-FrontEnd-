@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar_user from './components/Navbar_user';
 import Navbar_admin from './components/Navbar_admin';
 import Navbar from './components/Navbar';
-import Game_Manage from './pages/Admin/Game_Manage.jsx'
+
 // Pages
 import Login_Page from './pages/Login_Page';
 import Register_Page from './pages/Register_Page';
@@ -28,6 +28,7 @@ import AdminProfile from './pages/User/AdminProfile_page';
 import BillTemplate from './pages/User/bill';
 
 // admin
+import Game_Manage from './pages/Admin/Game_Manage.jsx';
 
 
 import { useAuth } from './contexts/AuthContext'; // 👈 ย้อนขึ้นไปหา contexts
@@ -166,15 +167,25 @@ function App() {
               }
             />
 
-            {/* หน้า hr */}
+            {/* หน้า admin */}
             <Route
               path="/admin"
               element={
                 <ProtectedRoute role="admin">
-                  
+                  <HomePage_NotLog/>
                 </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/admin/games"
+              element={
+                <ProtectedRoute role="admin">
+                  <Game_Manage/>
+                </ProtectedRoute>
+              }
+            />
+
           </Routes>
         </main>
       </div>

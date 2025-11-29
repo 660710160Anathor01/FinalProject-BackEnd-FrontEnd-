@@ -20,50 +20,30 @@ const Navbar_admin = () => {
   };
 
   return (
-    <nav className="bg-purple-500 shadow-lg sticky top-0 z-50">
+    <nav className="bg-green-500 shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-8">
             <NavLink 
-              to="/hr" 
+              to="/admin" 
               className={({ isActive }) => 
                 `text-white hover:text-gray-200 transition-colors font-medium ${
                   isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
                 }`
               }
             >
-              หน้าแรก
+              Home
             </NavLink>
             <NavLink 
-              to="/hr/applicant" 
+              to="/admin/games" 
               className={({ isActive }) => 
                 `text-white hover:text-gray-200 transition-colors font-medium ${
                   isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
                 }`
               }
             >
-              จัดการผู้สมัคร
-            </NavLink>
-            <NavLink 
-              to="/hr/document" 
-              className={({ isActive }) => 
-                `text-white hover:text-gray-200 transition-colors font-medium ${
-                  isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
-                }`
-              }
-            >
-              คลังเอกสาร
-            </NavLink>
-            <NavLink 
-              to="/hr/report" 
-              className={({ isActive }) => 
-                `text-white hover:text-gray-200 transition-colors font-medium ${
-                  isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
-                }`
-              }
-            >
-              สร้างรายงาน
+              Edit Game
             </NavLink>
           </div>
 
