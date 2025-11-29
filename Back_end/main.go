@@ -21,7 +21,7 @@ type Company struct {
 }
 
 type Game struct {
-	GameID      int       	`json:"game_id"`
+	GameID      string       	`json:"game_id"`
 	GameName 	string    	`json:"game_name"`
 	GameType    string    	`json:"game_type"`
     Icon        string      `json:"icon"`
@@ -308,7 +308,7 @@ func getGame(c *gin.Context) {
     id := c.Param("id")
     var game Game
 
-    err := db.QueryRow("SELECT game_id, game_name, game_type, icon, company_id, created_at FROM game WHERE game_id = $1", id).
+    err := db.QueryRow("SELECT game_id, game_name, game_type, icon, company_id, created_at FROM game WHERE game_id = $1", id+"").
         Scan(&game.GameID, &game.GameName, &game.GameType, &game.Icon, &game.CompanyID, &game.CreatedAt)
 
     if err == sql.ErrNoRows {
@@ -442,7 +442,6 @@ func updateGame(c *gin.Context) {
         return
     }
 
-    updateGame.GameID = id
     updateGame.UpdatedAt = updatedAt
     c.JSON(http.StatusOK, updateGame)
 }
@@ -536,22 +535,20 @@ func createGame(c *gin.Context) {
         return
     }
 
-    var game_id  int
     var createdAt, updatedAt time.Time
 
     err := db.QueryRow(
-        `INSERT INTO Game (game_name, game_type, icon, company_id)
-         VALUES ($1, $2, $3, $4)
-         RETURNING game_id, created_at, icon, updated_at`,
-        newGame.GameName, newGame.GameType, newGame.Icon, newGame.CompanyID,
-    ).Scan(&game_id, &createdAt, &updatedAt)
+        `INSERT INTO game (game_id, game_name, game_type, icon, company_id)
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING  created_at, updated_at`,
+        newGame.GameID,newGame.GameName, newGame.GameType, newGame.Icon, newGame.CompanyID,
+    ).Scan(&createdAt, &updatedAt)
 
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
 
-    newGame.GameID = game_id
     newGame.CreatedAt = createdAt
     newGame.UpdatedAt = updatedAt
 
