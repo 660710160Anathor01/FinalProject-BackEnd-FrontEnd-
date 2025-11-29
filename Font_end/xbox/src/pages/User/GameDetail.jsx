@@ -6,17 +6,46 @@ import { fetchGames } from "../../data/games";
 export default function GameDetail() {
   const { id } = useParams();
   const [game, setGame] = useState(null);
+  const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    fetchGames().then((games) => {
-      if (!mounted) return;
-      const found = games.find((g) => String(g.id) === String(id));
-      setGame(found || null);
-      setLoading(false);
-    });
-    return () => (mounted = false);
+
+    async function fetchGameById() {
+      try {
+        const res = await fetch(`http://127.0.0.1:8080/api/v1/game/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch game");
+        const data = await res.json();
+        if (mounted) {
+          setGame(data || null);
+          setLoading(false);
+        }
+        
+        
+          // const companyRes = await fetch(`http://127.0.0.1:8080/api/v1/company/${data.company_id}`);
+          // if (!companyRes.ok) throw new Error("Failed to fetch company");
+          // const companyData = await companyRes.json();
+          // if (mounted) {
+          //   setCompany(companyData || null);
+          //   setLoading(false);
+          // }
+
+
+      } catch (error) {
+        console.error(error);
+        if (mounted) {
+          setGame(null);
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchGameById();
+
+    return () => {
+      mounted = false;
+    };
   }, [id]);
 
   if (loading) return <div className="p-8 text-white">Loading...</div>;
@@ -34,15 +63,15 @@ export default function GameDetail() {
 
       <div className="flex flex-col md:flex-row gap-6">
         <div className="w-full md:w-1/3">
-          <img src={game.image} alt={game.title} className="w-full rounded-lg object-cover" />
+          <img src={game.icon} alt={game.game_name} className="w-full rounded-lg object-cover" />
         </div>
 
         <div className="flex-1">
-          <h2 className="text-2xl font-bold mb-2">{game.title}</h2>
+          <h2 className="text-2xl font-bold mb-2">{game.game_name}</h2>
 
           <div className="text-gray-300 mb-4">
-            <p><strong>Developer:</strong> {game.developer}</p>
-            <p><strong>Category:</strong> {game.category}</p>
+            <p><strong>Developer:</strong> {game.company_name}</p>
+            <p><strong>Category:</strong> {game.game_type}</p>
             <p><strong>Updated:</strong> {game.updated}</p>
           </div>
 

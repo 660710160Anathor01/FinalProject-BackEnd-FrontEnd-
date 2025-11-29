@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink  } from 'react-router-dom';
+import BillTemplate from "./bill";
 
 async function fetchPaymentData() {
   // const res = await fetch("/api/payment");
@@ -51,54 +52,35 @@ export default function Payment() {
 
         {/* Buttons */}
         <div className="space-y-3">
-          <button
-            onClick={() => setOpenBill(true)}
-            className="w-full bg-green-600 hover:bg-purple-700 text-white py-2 rounded-lg"
+          <NavLink
+            to="/user/bill"
+            className={({ isActive }) =>
+              `text-white hover:text-gray-200 transition-colors font-medium ${isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
+              }`
+            }
           >
-            ยืนยันการสั่งซื้อ
-          </button>
+            <button
+              className="w-full bg-green-600 hover:bg-purple-700 text-white py-2 rounded-lg"
+            >
+              ยืนยันการสั่งซื้อ
+            </button>
+          </NavLink>
 
-          <button className="w-full bg-gray-300 hover:bg-gray-400 text-black py-2 rounded-lg">
-            ยกเลิก
-          </button>
+          <NavLink
+            to="/user/gamepass"
+            className={({ isActive }) =>
+              `text-white hover:text-gray-200 transition-colors font-medium ${isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
+              }`
+            }
+          >
+            <button className="w-full bg-gray-300 hover:bg-gray-400 text-black py-2 rounded-lg">
+              ยกเลิก
+            </button>
+          </NavLink>
+
         </div>
       </div>
 
-      {/* ===================== BILL MODAL ===================== */}
-      {openBill && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md">
-            <p className="text-lg">
-              รหัสใบเสร็จ : {payment.id}
-            </p>
-            <p className="mt-2">
-              สั่งซื้อแล้วเมื่อวันที่ : {payment.date}
-            </p>
-            <p className="mt-2">
-              {payment.productName} – {payment.duration} : {payment.price} บาท
-            </p>
-
-            <p className="mt-4 font-bold text-xl">
-              รวมทั้งหมด {payment.price} บาท
-            </p>
-<NavLink
-                                   to="/user"
-                                   className={({ isActive }) =>
-                                        `text-white hover:text-gray-200 transition-colors font-medium ${isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
-                                        }`
-                                   }
-                              >
-                                   <button
-              onClick={() => setOpenBill(false)}
-              className="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg"
-            >
-              กลับไปหน้าหลัก
-            </button>
-                              </NavLink>
-            
-          </div>
-        </div>
-      )}
     </div>
   );
 }
