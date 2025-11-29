@@ -48,7 +48,7 @@ export default function Payment() {
           />
         </div>
 
-        <p className="text-xl font-semibold mb-4">{payment.price} บาท</p>
+        <p className="text-xl font-semibold mb-4">{payment.price} bath</p>
 
         {/* Buttons */}
         <div className="space-y-3">
@@ -62,7 +62,7 @@ export default function Payment() {
             <button
               className="w-full bg-green-600 hover:bg-purple-700 text-white py-2 rounded-lg"
             >
-              ยืนยันการสั่งซื้อ
+              Confirm Purchase
             </button>
           </NavLink>
 
@@ -74,7 +74,7 @@ export default function Payment() {
             }
           >
             <button className="w-full bg-gray-300 hover:bg-gray-400 text-black py-2 rounded-lg">
-              ยกเลิก
+            Cancel
             </button>
           </NavLink>
 
