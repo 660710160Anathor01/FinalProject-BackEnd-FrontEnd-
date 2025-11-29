@@ -6,24 +6,42 @@ export default function AdminProfile() {
 
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let mounted = true;
 
-    fetchAdmins().then((admins) => {
-      if (!mounted) return;
-      const found = admins.find((a) => String(a.id) === String(id));
-      setAdmin(found || null);
-      setLoading(false);
-    });
+    const fetchAdminById = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8080/api/v1/admin/${id}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (mounted) {
+          setAdmin(data || null);
+        }
+      } catch (err) {
+        if (mounted) {
+          setError(err.message);
+        }
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
 
-    return () => { mounted = false };
+    fetchAdminById();
+
+    return () => {
+      mounted = false;
+    };
   }, [id]);
 
-  if (loading) return <div className="p-8 text-white">Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!admin) return <div>Admin not found</div>;
 
   if (!admin)
     return (
@@ -44,15 +62,15 @@ export default function AdminProfile() {
 
       <div className="bg-[#3c4763] p-5 rounded-xl shadow-lg">
         <img
-          src={admin.avatar}
-          alt={admin.name}
+          src="/images/xbox/profile.png"
+          alt={admin.admin_name}
           className="w-20 h-20 rounded-full object-cover border mb-3"
         />
 
-        <p className="text-xl mb-2">{admin.name}</p>
+        <p className="text-xl mb-2">{admin.admin_name}</p>
 
         <p className="mb-1">
-          <span className="font-semibold">Admin ID:</span> 00{admin.id}
+          <span className="font-semibold">Admin ID:</span> 00{admin.admin_id}
         </p>
 
         <p className="mb-1">
