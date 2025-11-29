@@ -5,7 +5,7 @@ import { BookOpenIcon, LogoutIcon } from '@heroicons/react/outline';
 const EditGamePage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-
+  
   const [formData, setFormData] = useState({
     game_id: '',
     game_name: '',
@@ -19,11 +19,7 @@ const EditGamePage = () => {
   const [loading, setLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState('');
 
-  // ตรวจสอบ login
-  useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAdminAuthenticated');
-    if (!isAuthenticated) navigate('/login');
-  }, [navigate]);
+
 
   // โหลดข้อมูลเกม
   useEffect(() => {
@@ -84,7 +80,7 @@ const EditGamePage = () => {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          game_id: parseInt(formData.game_id),
+          game_id: formData.game_id,
           game_name: formData.game_name.trim(),
           game_type: formData.game_type.trim(),
           icon: formData.icon.trim(),
