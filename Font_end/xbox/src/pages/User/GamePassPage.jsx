@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink  } from 'react-router-dom';
 export default function GamePassPage() {
      return (
           <div className="flex min-h-screen bg-black text-white">
@@ -25,28 +26,37 @@ export default function GamePassPage() {
 
                     {/* Content */}
                     <div className="mt-10 flex justify-between items-start px-60">
-  {/* Left Button Section */}
-  <div className="space-y-6">
-    <button className="bg-green-600 hover:bg-green-700 text-white px-12 py-4 rounded-xl text-xl font-bold shadow-lg">
-      BUY
-      <div className="text-sm font-light">140 bath/month</div>
-    </button>
+                         {/* Left Button Section */}
+                         <div className="space-y-6">
+                              <NavLink
+                                   to="/user/payment"
+                                   className={({ isActive }) =>
+                                        `text-white hover:text-gray-200 transition-colors font-medium ${isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
+                                        }`
+                                   }
+                              >
+                                   <button className="bg-green-600 hover:bg-green-700 text-white px-12 py-4 rounded-xl text-xl font-bold shadow-lg">
+                                        BUY
+                                        <div className="text-sm font-light">140 bath/month</div>
+                                   </button>
+                              </NavLink>
 
-    <div className="text-yellow-400 px-6 py-3 rounded-xl text-xl font-extrabold w-fit">
-      ▶ JOIN NOW!!!
-    </div>
-  </div>
 
-  {/* Right Features */}
-  <div className="pr-5">
-     <h1>การสมัครใช้งานจะดำเนินการต่อไปโดยอัตโนมัติ</h1>
-    <ul className="space-y-3 text-lg">
-      <li>• เกมส์คุณภาพระดับพรีเมียมหลายร้อยเกม</li>
-      <li>• รับเกมออกใหม่ตั้งแต่วันแรก</li>
-      <li>• ข้อเสนอและส่วนลดสำหรับสมาชิก</li>
-    </ul>
-  </div>
-</div>
+                              <div className="text-yellow-400 px-6 py-3 rounded-xl text-xl font-extrabold w-fit">
+                                   ▶ JOIN NOW!!!
+                              </div>
+                         </div>
+
+                         {/* Right Features */}
+                         <div className="pr-5">
+                              <h1>การสมัครใช้งานจะดำเนินการต่อไปโดยอัตโนมัติ</h1>
+                              <ul className="space-y-3 text-lg">
+                                   <li>• เกมส์คุณภาพระดับพรีเมียมหลายร้อยเกม</li>
+                                   <li>• รับเกมออกใหม่ตั้งแต่วันแรก</li>
+                                   <li>• ข้อเสนอและส่วนลดสำหรับสมาชิก</li>
+                              </ul>
+                         </div>
+                    </div>
 
                </div>
           </div>
