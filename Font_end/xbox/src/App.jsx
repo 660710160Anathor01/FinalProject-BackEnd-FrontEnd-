@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar_user from './components/Navbar_user';
 import Navbar_admin from './components/Navbar_admin';
 import Navbar from './components/Navbar';
-
+import Game_Manage from './pages/Admin/Game_Manage.jsx'
 // Pages
 import Login_Page from './pages/Login_Page';
 import Register_Page from './pages/Register_Page';
@@ -154,6 +154,15 @@ function App() {
                 <ProtectedRoute role="user">
                   <BillTemplate />
                 </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/test"
+              element={
+                
+                  <Game_Manage />
+                
               }
             />
 
