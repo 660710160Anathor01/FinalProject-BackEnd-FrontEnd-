@@ -426,7 +426,7 @@ func main(){
 	r := gin.Default()    
     
 
-    r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+    //r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
     r.Use(cors.New(cors.Config{
        AllowOrigins:     []string{

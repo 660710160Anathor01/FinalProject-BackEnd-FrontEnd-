@@ -7,11 +7,23 @@ export default function AllGame() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetchGames().then((data) => setGames(data));
+    fetch("http://127.0.0.1:8080/api/v1/games")
+      .then((res) => res.json())
+      .then((data) => {
+        const formattedGames = data.map((game) => ({
+          id: game.game_id,
+          game_name: game.game_name,
+          game_type: game.game_type,
+          icon: game.icon,
+          updated: game.updated_at,
+        }));
+        setGames(formattedGames);
+      })
+      .catch((err) => console.error("Error fetching games:", err));
   }, []);
 
   const filteredGames = games.filter((game) =>
-    game.title.toLowerCase().includes(search.toLowerCase())
+    (game.title || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -36,8 +48,8 @@ export default function AllGame() {
         {filteredGames.map((game) => (
           <GameCard
             key={game.id}
-            title={game.title}
-            image={game.image}
+            title={game.game_name}
+            image={game.icon}
             updated={game.updated}
           />
         ))}
