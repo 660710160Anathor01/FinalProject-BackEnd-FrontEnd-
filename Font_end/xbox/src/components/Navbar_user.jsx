@@ -33,7 +33,7 @@ const Navbar_user = () => {
                 }`
               }
             >
-              หน้าแรก
+              Home
             </NavLink>
 
             <NavLink 
@@ -67,6 +67,18 @@ const Navbar_user = () => {
             >
               แจ้งเตือน
             </NavLink>
+
+            <NavLink 
+              to="/user/help" 
+              className={({ isActive }) => 
+                `text-white hover:text-gray-200 transition-colors font-medium ${
+                  isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
+                }`
+              }
+            >
+              Help
+            </NavLink>
+        
 
           <NavLink 
               to="/user/gamepass" 
