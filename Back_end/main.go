@@ -11,62 +11,68 @@ import(
     "strconv"
 	"net/http"
 	"time"
+  
 )
 
-type Applicant struct {
-	ApplicantID int       	`json:"applicant_id"`
-	FirstName 	string    	`json:"first_name"`
-	LastName    string    	`json:"last_name"`
-    Birthday    time.Time   `json:"birth_day"`
-	Email      	string    	`json:"email"`
-	Phone      	string      `json:"phone"`
+type Company struct {
+	CompanyID       int       	`json:"company_id"`
+	CompanyName 	string    	`json:"company_name"`
+	Email      	    string    	`json:"email"`
+}
+
+type Game struct {
+	GameID      int       	`json:"game_id"`
+	GameName 	string    	`json:"game_name"`
+	GameType    string    	`json:"game_type"`
+    Icon        string      `json:"icon"`
+	CompanyID   int         `json:"company_id"`
 	CreatedAt 	time.Time 	`json:"created_at"`
 	UpdatedAt 	time.Time 	`json:"updated_at"`
 }
 
-type Apply struct {
-	ApplyID     int       	`json:"apply_id"`
-	Position 	string    	`json:"position"`
-	File        string    	`json:"file"`
-	Stage       string    	`json:"stage"`
-	ApplicantID int      `json:"applicant_id"`
-	CreatedAt 	time.Time 	`json:"created_at"`
-	UpdatedAt 	time.Time 	`json:"updated_at"`
+type Library struct {
+	LibraryID       int       	`json:"library_id"`
+	GameID 	        int    	    `json:"game_id"`
+	CreatedAt 	    time.Time 	`json:"created_at"`
+	
 }
 
-type Hr struct {
-	HrID        int       	`json:"hr_id"`
-	FirstName 	string    	`json:"first_name"`
-	LastName    string    	`json:"last_name"`
-	Email      	string    	`json:"email"`
-	Phone      	string      `json:"phone"`
-	CreatedAt 	time.Time 	`json:"created_at"`
-	UpdatedAt 	time.Time 	`json:"updated_at"`
+type AppUser struct {
+	UserID          int       	`json:"user_id"`
+    LibraryID	    int     	`json:"library_id"`
+	UserName        string    	`json:"user_name"`    	
+    Phone           string      `json:"phone"`
+    Email 	        string    	`json:"email"`
+    Password 	    string    	`json:"password"`
+
+    PaymentDate     time.Time  	`json:"payment_date"`
+	IsLogin         bool    	`json:"islogin"`
+    CreatedAt 	    time.Time 	`json:"created_at"`
+    
 }
 
-type Schedule struct {
-	ScheduleId      int       	`json:"schedule_id"`
-    FirstName 	    string    	`json:"first_name"`
-	LastName        string    	`json:"last_name"`
-    TimeS           time.Time 	`json:"time_s"`
-    ApplicantID     int         `json:"applicant_id"`
-}
-
-type Appuser struct {
-    Email      	string    	`json:"email"`
+type Admin struct {
+    AdminID     int         `json:"admin_id"`
+    AdminName   string      `json:"admin_name"`
+    Email       string      `json:"email"`
+    Phone       string      `json:"phone"`
     Password    string      `json:"password"`
-    Role        string      `json:"role"`
-    IsLogin     bool        `json:"islogin"`
-	CreatedAt 	time.Time 	`json:"created_at"`
+
+    IsLogin     bool        `json:"islogin"`  
+    CreatedAt 	time.Time 	`json:"created_at"`
 }
 
-type Blacklist struct {
-    FirstName 	    string    	`json:"first_name"`
-	LastName        string    	`json:"last_name"`
-    Birthday        time.Time   `json:"birth_day"`
-    Email      	    string    	`json:"email"`
-    History         string    	`json:"history"`
+type Bill struct {
+    BillID 	        string    	`json:"bill_id"`
+	UserID          string    	`json:"user_id"`
+    Price           float64     `json:"price"`
+    CreatedAt 	    time.Time 	`json:"created_at"`
 }
+
+type ErrorResponse struct {
+    Error string `json:"error"`
+}
+
 
 func getEnv(key, defaultValue string) string{
 	if value := os.Getenv(key); value != ""{
@@ -74,7 +80,6 @@ func getEnv(key, defaultValue string) string{
 	}
 	return defaultValue 
 }
-
 //conect db
 var db *sql.DB
 
@@ -110,202 +115,174 @@ func initDB(){
 	db.SetConnMaxLifetime(5 * time.Minute)
 }
 
-func getAllApplicants(c *gin.Context) {
+//=========================================================================================================================================================================================
+// Get
+//=========================================================================================================================================================================================
+
+func getAllUser(c *gin.Context) {
     var rows *sql.Rows
     var err error
-    rows, err = db.Query("SELECT applicant_id, first_name, last_name, birth_day, email, phone, created_at FROM applicants")
+    rows, err = db.Query("SELECT user_id, library_id, user_name, phone, email, password, payment_date, islogin, created_at FROM app_user")
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
     defer rows.Close()
 
-    var applicants []Applicant
+    var app_users []AppUser
     for rows.Next() {
-        var applicant Applicant
-        err := rows.Scan(&applicant.ApplicantID, &applicant.FirstName, &applicant.LastName, &applicant.Birthday, &applicant.Email, &applicant.Phone, &applicant.CreatedAt)
+        var app_user AppUser
+        err := rows.Scan(&app_user.UserID, &app_user.LibraryID, &app_user.UserName, &app_user.Phone, &app_user.Email, &app_user.Password, &app_user.PaymentDate, &app_user.IsLogin, &app_user.CreatedAt)
         if err != nil {
         }
-        applicants = append(applicants, applicant)
+        app_users = append(app_users, app_user)
     }
-	if applicants == nil {
-		applicants = []Applicant{}
+	if app_users == nil {
+		app_users = []AppUser{}
 	}
 
-	c.JSON(http.StatusOK, applicants)
+	c.JSON(http.StatusOK, app_users)
 }
 
-func getApplicantAuthen(c *gin.Context) {
-    var appuser Appuser
 
-    if err := c.ShouldBindJSON(&appuser); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        fmt.Println("❌ JSON binding error:", err.Error())
-        return
-    }
-
-    fmt.Println("✅ Email:", appuser.Email)
-    fmt.Println("✅ Password:", appuser.Password)
-
-    var role string
-    err := db.QueryRow("SELECT role FROM appuser WHERE email=$1 AND password=$2", appuser.Email, appuser.Password).Scan(&role)
-    if err != nil {
-        fmt.Println("❌ QueryRow error:", err)
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่พบผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง"})
-        return
-    }
-
-    result, err := db.Exec(`
-        UPDATE appuser 
-        SET islogin = TRUE 
-        WHERE email = $1 AND password = $2
-    `, appuser.Email, appuser.Password)
-
-    if err != nil {
-        fmt.Println("❌ SQL Update error:", err)
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่สามารถอัพเดตสถานะการล็อกอินได้"})
-        return
-    }
-
-    rowsAffected, err := result.RowsAffected()
-    if err != nil {
-        fmt.Println("❌ RowsAffected error:", err)
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่สามารถตรวจสอบผลลัพธ์ของการอัพเดตได้"})
-        return
-    }
-
-    if rowsAffected == 0 {
-        fmt.Println("❌ No rows updated")
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่สามารถอัพเดตสถานะการล็อกอินได้"})
-        return
-    }
-
-    fmt.Println("✅ Role:", role)
-
-    c.JSON(http.StatusOK, gin.H{"role": role})
-}
-
-func getApplicant(c *gin.Context) {
+func getAppUser(c *gin.Context) {
     id := c.Param("id")
-    var applicant Applicant
+    var appuser AppUser
 
-    err := db.QueryRow("SELECT applicant_id, first_name, last_name, birth_day, email, phone FROM applicants WHERE applicant_id = $1", id).
-        Scan(&applicant.ApplicantID, &applicant.FirstName, &applicant.LastName, &applicant.Birthday, &applicant.Email, &applicant.Phone)
+    err := db.QueryRow("SELECT user_id, library_id, user_name, phone, email, password, payment_date, islogin, created_at FROM app_user WHERE user_id = $1", id).
+        Scan(&appuser.UserID, &appuser.LibraryID, &appuser.UserName, &appuser.Phone, &appuser.Email, &appuser.Password, &appuser.PaymentDate, &appuser.IsLogin, &appuser.CreatedAt)
 
     if err == sql.ErrNoRows {
-        c.JSON(http.StatusNotFound, gin.H{"error": "applicant not found"})
+        c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
         return
     } else if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
 
-    c.JSON(http.StatusOK, applicant)
+    c.JSON(http.StatusOK, appuser)
 }
 
 
-func updateApplicant(c *gin.Context) {
+func getAdmin(c *gin.Context) {
+    id := c.Param("id")
+    var admin Admin
+
+    err := db.QueryRow("SELECT admin_id, admin_name, phone, email, password, islogin, created_at FROM admin WHERE admin_id = $1", id).
+        Scan(&admin.AdminID, &admin.AdminName, &admin.Phone, &admin.Email, &admin.Password, &admin.IsLogin, &admin.CreatedAt)
+
+    if err == sql.ErrNoRows {
+        c.JSON(http.StatusNotFound, gin.H{"error": "admin not found"})
+        return
+    } else if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, admin)
+}
+
+
+func getAllGame(c *gin.Context) {
+    var rows *sql.Rows
+    var err error
+
+    rows, err = db.Query("SELECT game_id, game_name, game_type, icon, company_id, created_at FROM game")
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+    defer rows.Close()
+
+    var games []Game
+    for rows.Next() {
+        var game Game
+        err := rows.Scan(&game.GameID, &game.GameName, &game.GameType, &game.Icon, &game.CompanyID, &game.CreatedAt)
+        if err != nil {
+        }
+        games = append(games, game)
+    }
+	if games == nil {
+		games = []Game{}
+	}
+
+	c.JSON(http.StatusOK, games)
+}
+
+
+func getGame(c *gin.Context) {
+    id := c.Param("id")
+    var game Game
+
+    err := db.QueryRow("SELECT game_id, game_name, game_type, icon, company_id, created_at FROM game WHERE game_id = $1", id).
+        Scan(&game.GameID, &game.GameName, &game.GameType, &game.Icon, &game.CompanyID, &game.CreatedAt)
+
+    if err == sql.ErrNoRows {
+        c.JSON(http.StatusNotFound, gin.H{"error": "game not found"})
+        return
+    } else if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, game)
+}
+
+
+func getLibrary(c *gin.Context) {
+    id := c.Param("id")
+    var library Library
+
+    err := db.QueryRow("SELECT library_id, game_id, created_at FROM library WHERE library_id = $1", id).
+        Scan(&library.LibraryID, &library.GameID, &library.CreatedAt)
+
+    if err == sql.ErrNoRows {
+        c.JSON(http.StatusNotFound, gin.H{"error": "library not found"})
+        return
+    } else if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, library)
+}
+
+//=========================================================================================================================================================================================
+// Update
+//=========================================================================================================================================================================================
+
+
+func updateAppUserInfo(c *gin.Context) {
     var ID int
     id := c.Param("id")
-    var updateApplicant Applicant
+    var updateAppUserInfo AppUser
 
-    if err := c.ShouldBindJSON(&updateApplicant); err != nil {
+    if err := c.ShouldBindJSON(&updateAppUserInfo); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
-    var updatedAt time.Time
+    
     err := db.QueryRow(
-        `UPDATE Applicants
-         SET first_name = $1, last_name = $2, birth_day =$3, email = $4, phone = $5
-         WHERE id = $6
-         RETURNING ID,updated_at`,
-        updateApplicant.FirstName, updateApplicant.LastName, updateApplicant.Birthday, updateApplicant.Email,
-        updateApplicant.Phone, id,
-    ).Scan(&ID, &updateApplicant)
+        `UPDATE AppUser
+         SET user_name = $1, phone = $2, email =$3, password = $4
+         WHERE user_id = $5
+         RETURNING user_id`,
+        updateAppUserInfo.UserName, updateAppUserInfo.Phone, updateAppUserInfo.Email, updateAppUserInfo.Password, id,
+    ).Scan(&ID)
 
     if err == sql.ErrNoRows {
-        c.JSON(http.StatusNotFound, gin.H{"error": "Applicant not found"})
+        c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
         return
     } else if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    updateApplicant.ApplicantID = ID
-	updateApplicant.UpdatedAt = updatedAt
-	c.JSON(http.StatusOK, updateApplicant)
+    updateAppUserInfo.UserID = ID
+	c.JSON(http.StatusOK, updateAppUserInfo)
 }
 
-func deleteApplicant(c *gin.Context) {
-    id := c.Param("id")
-
-    result, err := db.Exec("DELETE FROM Applicants WHERE applicant_id = $1", id)
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
-
-    rowsAffected, err := result.RowsAffected()
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
-
-    if rowsAffected == 0 {
-        c.JSON(http.StatusNotFound, gin.H{"error": "Applicant not found"})
-        return
-    }
-
-    c.JSON(http.StatusOK, gin.H{"message": "Applicant deleted successfully"})
-}
-
-
-
-func getAllApply(c *gin.Context) {
-    var rows *sql.Rows
-    var err error
-
-    rows, err = db.Query("SELECT apply_id, position, stage, applicant_id, created_at FROM apply")
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
-    defer rows.Close()
-
-    var applies []Apply
-    for rows.Next() {
-        var apply Apply
-        err := rows.Scan(&apply.ApplyID, &apply.Position, &apply.Stage, &apply.ApplicantID, &apply.CreatedAt)
-        if err != nil {
-        }
-        applies = append(applies, apply)
-    }
-	if applies == nil {
-		applies = []Apply{}
-	}
-
-	c.JSON(http.StatusOK, applies)
-}
-
-func getApply(c *gin.Context) {
-    id := c.Param("id")
-    var apply Apply
-
-    err := db.QueryRow("SELECT apply_id, position, stage, applicant_id, created_at FROM apply WHERE apply_id = $1", id).
-        Scan(&apply.ApplyID, &apply.Position, &apply.Stage, &apply.ApplicantID, &apply.CreatedAt)
-
-    if err == sql.ErrNoRows {
-        c.JSON(http.StatusNotFound, gin.H{"error": "apply not found"})
-        return
-    } else if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
-
-    c.JSON(http.StatusOK, apply)
-}
-
-func updateApply(c *gin.Context) {
+func updateGame(c *gin.Context) {
     idParam := c.Param("id")
     id, err := strconv.Atoi(idParam)
     if err != nil {
@@ -313,127 +290,107 @@ func updateApply(c *gin.Context) {
         return
     }
 
-    var updateApply Apply
-    if err := c.ShouldBindJSON(&updateApply); err != nil {
+    var updateGame Game
+    if err := c.ShouldBindJSON(&updateGame); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
     var updatedAt time.Time
     err = db.QueryRow(
-        `UPDATE Apply
-         SET stage = $1, updated_at = NOW()
-         WHERE apply_id = $2
+        `UPDATE Game
+         SET game_name = $1, game_type = $2, icon = $3, company_id = $4, updated_at = NOW()
+         WHERE game_id = $5
          RETURNING updated_at`,
-        updateApply.Stage, id,
+        updateGame.GameName, updateGame.GameType, updateGame.Icon, updateGame.CompanyID , id,
     ).Scan(&updatedAt)
 
     if err == sql.ErrNoRows {
-        c.JSON(http.StatusNotFound, gin.H{"error": "Apply not found"})
+        c.JSON(http.StatusNotFound, gin.H{"error": "Game not found"})
         return
     } else if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
 
-    updateApply.ApplyID = id
-    updateApply.UpdatedAt = updatedAt
-    c.JSON(http.StatusOK, updateApply)
+    updateGame.GameID = id
+    updateGame.UpdatedAt = updatedAt
+    c.JSON(http.StatusOK, updateGame)
 }
 
+//=========================================================================================================================================================================================
+// Create
+//=========================================================================================================================================================================================
 
-func createApplicant(c *gin.Context) {
-    var newApplicant Applicant
 
-    if err := c.ShouldBindJSON(&newApplicant); err != nil {
+func createAppUser(c *gin.Context) {
+    var newAppUser AppUser
+
+    if err := c.ShouldBindJSON(&newAppUser); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
     var id int
-    var createdAt, updatedAt time.Time
-
+    var payment_date time.Time
+   
     err := db.QueryRow(
-        `INSERT INTO applicants (first_name, last_name, birth_day, email, phone)
+        `INSERT INTO app_user (library_id, user_name, phone, email, password)
          VALUES ($1, $2, $3, $4, $5)
-         RETURNING applicant_id, created_at, updated_at`,
-        newApplicant.FirstName, newApplicant.LastName, newApplicant.Birthday, newApplicant.Email, newApplicant.Phone,
-    ).Scan(&id, &createdAt, &updatedAt)
+         RETURNING user_id, payment_date`,
+        newAppUser.LibraryID, newAppUser.UserName, newAppUser.Phone, newAppUser.Email, newAppUser.Password,
+    ).Scan(&id, &payment_date)
 
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    newApplicant.ApplicantID = id
-    newApplicant.CreatedAt = createdAt
-    newApplicant.UpdatedAt = updatedAt
+    newAppUser.UserID = id
+    newAppUser.PaymentDate = payment_date
 
-    c.JSON(http.StatusCreated, newApplicant)
+
+    c.JSON(http.StatusCreated, newAppUser)
 }
 
-func createAppuser(c *gin.Context) {
-    var appUser Appuser
 
-    if err := c.ShouldBindJSON(&appUser); err != nil {
+func createGame(c *gin.Context) {
+    var newGame Game
+
+    if err := c.ShouldBindJSON(&newGame); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
-    var createdAt time.Time
-
-    err := db.QueryRow(
-        `INSERT INTO appuser (email, password, role)
-         VALUES ($1, $2, $3)
-         RETURNING created_at`,
-        appUser.Email, appUser.Password, appUser.Role,
-    ).Scan(&createdAt)
-
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
-
-    appUser.CreatedAt = createdAt
-
-    c.JSON(http.StatusCreated, appUser)
-}
-
-
-func createApply(c *gin.Context) {
-    var newApply Apply
-
-    if err := c.ShouldBindJSON(&newApply); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-
-    // ใช้ RETURNING เพื่อดึงค่าที่ database generate (id, timestamps)
-    var apply_id  int
+    var game_id  int
     var createdAt, updatedAt time.Time
 
     err := db.QueryRow(
-        `INSERT INTO Apply (position, applicant_id)
-         VALUES ($1, $2)
-         RETURNING apply_id, created_at, updated_at`,
-        newApply.Position, newApply.ApplicantID,
-    ).Scan(&apply_id, &createdAt, &updatedAt)
+        `INSERT INTO Game (game_name, game_type, icon, company_id)
+         VALUES ($1, $2, $3, $4)
+         RETURNING game_id, created_at, icon, updated_at`,
+        newGame.GameName, newGame.GameType, newGame.Icon, newGame.CompanyID,
+    ).Scan(&game_id, &createdAt, &updatedAt)
 
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
 
-    newApply.ApplyID = apply_id
-    newApply.CreatedAt = createdAt
-    newApply.UpdatedAt = updatedAt
+    newGame.GameID = game_id
+    newGame.CreatedAt = createdAt
+    newGame.UpdatedAt = updatedAt
 
-    c.JSON(http.StatusCreated, newApply) // ใช้ 201 Created
+    c.JSON(http.StatusCreated, newGame) // ใช้ 201 Created
 }
 
-func deleteApply(c *gin.Context) {
+//=========================================================================================================================================================================================
+// Delete
+//=========================================================================================================================================================================================
+
+func deleteGame(c *gin.Context) {
     id := c.Param("id")
 
-    result, err := db.Exec("DELETE FROM Apply WHERE apply_id = $1", id)
+    result, err := db.Exec("DELETE FROM game WHERE game_id = $1", id)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
@@ -446,100 +403,15 @@ func deleteApply(c *gin.Context) {
     }
 
     if rowsAffected == 0 {
-        c.JSON(http.StatusNotFound, gin.H{"error": "Apply not found"})
+        c.JSON(http.StatusNotFound, gin.H{"error": "Game not found"})
         return
     }
 
-    c.JSON(http.StatusOK, gin.H{"message": "Apply deleted successfully"})
-}
-
-func getVerifyBlacklist(c *gin.Context) {
-    var blacklist Blacklist
-
-    if err := c.ShouldBindJSON(&blacklist); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        fmt.Println("❌ JSON binding error:", err.Error())
-        return
-    }
-
-    var dummy int
-    err := db.QueryRow(
-        "SELECT 1 FROM blacklist WHERE first_name = $1 AND last_name = $2",
-        blacklist.FirstName, blacklist.LastName,
-    ).Scan(&dummy)
-
-    if err == sql.ErrNoRows {
-        // ไม่เจอใน blacklist → ผ่าน
-        c.JSON(http.StatusOK, gin.H{"message": "ผ่าน"})
-        return
-    } else if err != nil {
-        // เกิดข้อผิดพลาดอื่น
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "ไม่สามารถตรวจสอบ blacklist ได้"})
-        fmt.Println("❌ DB error:", err.Error())
-        return
-    }
-
-    // เจอใน blacklist
-    c.JSON(http.StatusForbidden, gin.H{"message": "ถูกบล็อคโดย Blacklist"})
+    c.JSON(http.StatusOK, gin.H{"message": "Game deleted successfully"})
 }
 
 
-func getHr(c *gin.Context) {
-    id := c.Param("id")
-    var hr Hr
 
-    err := db.QueryRow("SELECT hr_id, first_name, last_name, email, phone FROM hr WHERE hr_id = $1", id).
-        Scan(&hr.HrID, &hr.FirstName, &hr.LastName, &hr.Email, &hr.Phone)
-
-    if err == sql.ErrNoRows {
-        c.JSON(http.StatusNotFound, gin.H{"error": "hr not found"})
-        return
-    } else if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
-
-    c.JSON(http.StatusOK, hr)
-}
-
-func getHrbyEmail(c *gin.Context) {
-    email := c.Query("email")
-    var hr Hr
-
-    err := db.QueryRow("SELECT first_name, last_name, email, phone FROM hr WHERE email = $1", email).
-        Scan(&hr.FirstName, &hr.LastName, &hr.Email, &hr.Phone)
-
-    if err == sql.ErrNoRows {
-        c.JSON(http.StatusNotFound, gin.H{"error": "hr not found"})
-        return
-    } else if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
-
-    c.JSON(http.StatusOK, hr)
-}
-
-func getApplicantProfile(c *gin.Context) {
-    email := c.Query("email")
-    var applicant Applicant
-    var apply1 Apply
-    err := db.QueryRow("SELECT a1.first_name, a1.last_name, a1.email, a1.phone, a2.position, a2.stage FROM applicants a1 LEFT join apply a2 on a1.applicant_id=a2.applicant_id WHERE email = $1", email).
-        Scan(&applicant.FirstName, &applicant.LastName, &applicant.Email, &applicant.Phone, &apply1.Position, &apply1.Stage)
-
-    if err == sql.ErrNoRows {
-        c.JSON(http.StatusNotFound, gin.H{"error": "applicant not found"})
-        return
-    } else if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
-
-    c.JSON(http.StatusOK, gin.H{
-        "applicant": applicant,
-        "application": apply1,
-    })
-}
 
 // @title           Simple API Example
 // @version         1.0
@@ -550,8 +422,12 @@ func getApplicantProfile(c *gin.Context) {
 func main(){
 	initDB()
 	defer db.Close()
+    
+	r := gin.Default()    
+    
 
-	r := gin.Default()
+    r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
     r.Use(cors.New(cors.Config{
        AllowOrigins:     []string{
         "http://127.0.0.1",       // 80
@@ -579,24 +455,24 @@ func main(){
 
 	api := r.Group("/api/v1")
 	{
-		api.GET("/applicants", getAllApplicants)
-	 	api.GET("/applicants/:id", getApplicant)
-	 	api.POST("/applicant", createApplicant)
-	 	api.PUT("/applicants/:id", updateApplicant)
-        api.POST("/applicant/auth", getApplicantAuthen)
-	 	api.DELETE("/applicants/:id", deleteApplicant)
-        api.GET("/applicants/profile", getApplicantProfile)
+		api.GET("/users", getAllUser)
+	 	api.GET("/user/:id", getAppUser)
+	 	api.POST("/user", createAppUser)
+	 	api.PUT("/user/:id", updateAppUserInfo)
+        //api.POST("/user/auth", getAppUserAuthen)
+	 	//api.DELETE("/user/:id", deleteApplicant)
+        //api.GET("/user/profile", getApplicantProfile)
 
-        api.GET("/applies", getAllApply)
-	 	api.GET("/apply/:id", getApply)
-        api.PUT("/upapply/:id", updateApply)
-	 	api.POST("/apply", createApply)
-        api.POST("/appuser", createAppuser)
-	 	api.DELETE("/apply/:id", deleteApply)
+        api.GET("/admin/:id", getAdmin)
+
+        api.GET("/games", getAllGame)
+	 	api.GET("/game/:id", getGame)
+        api.PUT("/game/:id", updateGame)
+	 	api.POST("/game", createGame)
+	 	api.DELETE("/game/:id", deleteGame)
         
-        api.POST("/blacklist", getVerifyBlacklist)
-        api.GET("/hr/:id", getHr)
-        api.GET("/hre", getHrbyEmail)
+        api.GET("/library/:id", getLibrary)
+   
         
     }
 	r.Run(":8080")
