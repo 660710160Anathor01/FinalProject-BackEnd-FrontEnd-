@@ -641,6 +641,7 @@ func main(){
         //api.GET("/user/profile", getApplicantProfile)
 
         api.GET("/admin/:id", getAdmin)
+        api.GET("/admins", getAllAdmin)
 
         api.GET("/games", getAllGame)
 	 	api.GET("/game/:id", getGame)
