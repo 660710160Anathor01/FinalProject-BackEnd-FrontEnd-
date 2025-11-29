@@ -6,19 +6,19 @@ CREATE TABLE company (
 );
 
 
+
 -- Table: game
 CREATE TABLE game (
     game_id         SERIAL PRIMARY KEY,
     game_name       VARCHAR(255) NOT NULL,
     game_type       VARCHAR(255),
-    icon           VARCHAR(255),
+    icon            VARCHAR(255),
     company_id      INT NOT NULL,
     created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     
     FOREIGN KEY (company_id) REFERENCES company(company_id) ON DELETE CASCADE
 );
-
 
 -- Table: library
 CREATE TABLE library (
@@ -58,6 +58,8 @@ CREATE TABLE admin (
 );
 
 
+
+
 -- Table: bill
 CREATE TABLE bill (
     bill_id         SERIAL PRIMARY KEY,
@@ -68,7 +70,6 @@ CREATE TABLE bill (
     FOREIGN KEY (user_id) REFERENCES app_user(user_id) ON DELETE CASCADE
 );
 
-
 ---------------------------------------------------------
 -- Insert data
 ---------------------------------------------------------
@@ -78,16 +79,16 @@ INSERT INTO company (company_name, company_email) VALUES
     ('zgo','zgo@gmail.com');
 
 INSERT INTO game (game_name, game_type, icon, company_id) VALUES
-    ('AAA','fps, co-op', "http://...............",1),
-    ('Biohazee','fps, horror', "http://...............",1);
+    ('AAA','fps, co-op', 'http', 1),
+    ('Biohazee','fps, horror', 'http', 1);
 
 INSERT INTO library (game_id) VALUES
     (1),
-    (2);
+    (1);
 
-INSERT INTO user (user_name, email, password, library_id, phone) VALUES
-    ('chai','somchai@gmail.com','123',1,'321321'),
-    ('yain','somyain@gmail.com','456',2,'123123');
+INSERT INTO app_user (user_name, email, password, payment_date, library_id, phone) VALUES
+    ('chai','somchai@gmail.com','123', '2025-03-15' , 1,'321321'),
+    ('yain','somyain@gmail.com','456', '2025-05-25' ,2,'123123');
 
 INSERT INTO admin (admin_name, email, phone, password) VALUES
     ('mon','mon@gmail.com','1234567890','321'),
@@ -97,4 +98,3 @@ INSERT INTO admin (admin_name, email, phone, password) VALUES
 INSERT INTO bill (user_id, price) VALUES
     (1,100),
     (2,100);
-
