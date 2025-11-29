@@ -233,6 +233,30 @@ func getAppUser(c *gin.Context) {
     c.JSON(http.StatusOK, appuser)
 }
 
+func getAllAdmin(c *gin.Context) {
+    var rows *sql.Rows
+    var err error
+    rows, err = db.Query("SELECT admin_id, admin_name, email, phone, islogin, created_at FROM admin")
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+    defer rows.Close()
+
+    var admins []Admin
+    for rows.Next() {
+        var admin Admin
+        err := rows.Scan(&admin.AdminID, &admin.AdminName, &admin.Phone, &admin.Email, &admin.IsLogin, &admin.CreatedAt)
+        if err != nil {
+        }
+        admins = append(admins, admin)
+    }
+	if admins == nil {
+		admins = []Admin{}
+	}
+
+	c.JSON(http.StatusOK, admins)
+}
 
 func getAdmin(c *gin.Context) {
     id := c.Param("id")
@@ -471,14 +495,12 @@ func createAppUser(c *gin.Context) {
 
     var id, library_id int
     var payment_date, created_at time.Time
-    fmt.Println("1")
-
+ 
     err := db.QueryRow(
         `INSERT INTO library (game_id, downloaded)
         VALUES ($1, $2)
         RETURNING library_id`,
         "", "").Scan(&library_id)
-    fmt.Println("2")
     
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -491,13 +513,11 @@ func createAppUser(c *gin.Context) {
          RETURNING user_id, payment_date, created_at`,
         library_id, newAppUser.UserName, newAppUser.Phone, newAppUser.Email, newAppUser.Password,
     ).Scan(&id, &payment_date, &created_at)
-    fmt.Println("3", err)
 
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    fmt.Println("4")
      
     newAppUser.UserID = id
     newAppUser.LibraryID = library_id
