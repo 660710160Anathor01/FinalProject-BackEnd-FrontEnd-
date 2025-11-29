@@ -9,7 +9,7 @@ export default function GameCard({ id, title, image, updated }) {
         <div className="p-3">
         
           <h3 className="text-white text-sm font-semibold">{title}</h3>
-          <p className="text-gray-300 text-xs mt-1">Updated {updated}</p>
+          <p className="text-gray-300 text-xs mt-1">Updated</p>
         </div>
       </div>
     </Link>
