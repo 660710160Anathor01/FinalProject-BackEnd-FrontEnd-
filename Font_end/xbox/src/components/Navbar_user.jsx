@@ -109,7 +109,7 @@ const Navbar_user = () => {
                 }`
               }
             >
-              ออกจากระบบ
+              logout
             </NavLink>
           </div>
         </div>
