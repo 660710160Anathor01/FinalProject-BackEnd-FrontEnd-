@@ -9,7 +9,7 @@ CREATE TABLE company (
 
 -- Table: game
 CREATE TABLE game (
-    game_id         SERIAL PRIMARY KEY,
+    game_id         VARCHAR(255) PRIMARY KEY,
     game_name       VARCHAR(255) NOT NULL,
     game_type       VARCHAR(255),
     icon            VARCHAR(255),
@@ -22,11 +22,11 @@ CREATE TABLE game (
 
 -- Table: library
 CREATE TABLE library (
-    library_id       SERIAL PRIMARY KEY,
-    game_id         INT NOT NULL,
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    library_id      SERIAL PRIMARY KEY,
+    game_id         VARCHAR(1000),
+    downloaded      VARCHAR(1000),
+    created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 
-    FOREIGN KEY (game_id) REFERENCES game(game_id) ON DELETE CASCADE
 );
 
 
@@ -98,9 +98,9 @@ INSERT INTO game (game_name, game_type, icon, company_id) VALUES
 ('Elden Ring', 'RPG', 'https://image.api.playstation.com/vulcan/ap/rnd/202108/0410/UAnLUUMdxA9cow8TEe8IfhuC.png', 9),
 ('PUBG: Battlegrounds', 'Battle Royale', 'https://cdn1.epicgames.com/spt-assets/53ec4985296b4facbe3a8d8d019afba9/pubg-battlegrounds-19vwb.jpg', 10);
 
-INSERT INTO library (game_id) VALUES
-    (1),
-    (1);
+INSERT INTO library (game_id, downloaded) VALUES
+    ('1','2'),
+    ('1-2','1');
 
 INSERT INTO app_user (user_name, email, password, payment_date, library_id, phone) VALUES
     ('chai','somchai@gmail.com','123', '2025-03-15' , 1,'321321'),
