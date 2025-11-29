@@ -463,7 +463,7 @@ func updateLibrary(c *gin.Context) {
 
     _, err = db.Exec(
         `UPDATE library
-         SET game_id = $1, download = $2
+         SET game_id = $1, downloaded = $2
          WHERE library_id = $3
          `,
         updateLibrary.GameID, updateLibrary.Downloaded, id,

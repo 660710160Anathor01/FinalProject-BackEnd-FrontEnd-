@@ -20,7 +20,7 @@ import NotificationItem from "../../components/NotificationItem";
   
     return (
       <div className="min-h-screen bg-[#2b3250] text-white flex flex-col items-center p-6 text-black">
-        <h1 className="text-3xl font-bold mb-6">การแจ้งเตือน</h1>
+        <h1 className="text-3xl font-bold mb-6">Notification</h1>
   
         <div className="w-full max-w-2xl space-y-4">
           {notifications.length > 0 ? (

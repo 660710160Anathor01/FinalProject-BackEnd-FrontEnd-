@@ -49,11 +49,11 @@ export default function GamePassPage() {
 
                          {/* Right Features */}
                          <div className="pr-5">
-                              <h1>การสมัครใช้งานจะดำเนินการต่อไปโดยอัตโนมัติ</h1>
+                              <h1>The registration process will continue automatically.</h1>
                               <ul className="space-y-3 text-lg">
-                                   <li>• เกมส์คุณภาพระดับพรีเมียมหลายร้อยเกม</li>
-                                   <li>• รับเกมออกใหม่ตั้งแต่วันแรก</li>
-                                   <li>• ข้อเสนอและส่วนลดสำหรับสมาชิก</li>
+                                   <li>• Hundreds of premium-quality games.</li>
+                                   <li>• Receive new games from day one.</li>
+                                   <li>• Offers and discounts for members.</li>
                               </ul>
                          </div>
                     </div>
