@@ -1,22 +1,48 @@
-import React, { useState } from 'react';
-import { Link, NavLink,useNavigate  } from 'react-router-dom';
-import { ShoppingCartIcon, SearchIcon, UserIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
-import { useAuth } from '../contexts/AuthContext'; // 👈 ย้อนขึ้นไปหา contexts
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { UserIcon } from '@heroicons/react/outline';
+import { useAuth } from '../contexts/AuthContext';
 
 const Navbar_user = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartCount] = useState(3);
+  const { auth, setAuth } = useAuth();
+  const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const navigate = useNavigate(); // ✅ เรียกบนสุดของฟังก์ชัน
 
-  const { setAuth } = useAuth(); // ✅
-  const navigate = useNavigate();
+  // Fetch user id
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const res = await fetch("http://127.0.0.1:8080/api/v1/users");
+        if (!res.ok) throw new Error("Failed to fetch users");
+        const users = await res.json();
+
+        const matchedUser = users.find(u => u.email === auth.email);
+        if (!matchedUser) throw new Error("User not found");
+
+        setUserId(matchedUser.user_id || matchedUser.id);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchUserId();
+  }, [auth.email]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const handleLogout = () => {
-    setAuth({ isLoggedIn: false, role: "" }); // ✅ เปลี่ยนสถานะ auth
-    navigate("/"); // ✅ กลับหน้าแรกหรือ login
+    setAuth({ isLoggedIn: false, role: "" });
+    navigate("/");
   };
 
   return (
@@ -25,9 +51,9 @@ const Navbar_user = () => {
         <div className="flex justify-between items-center h-16">
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-8">
-            <NavLink 
-              to="/user" 
-              className={({ isActive }) => 
+            <NavLink
+              to="/user"
+              className={({ isActive }) =>
                 `text-white hover:text-gray-200 transition-colors font-medium ${
                   isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
                 }`
@@ -36,9 +62,9 @@ const Navbar_user = () => {
               Home
             </NavLink>
 
-            <NavLink 
-              to="/user/games" 
-              className={({ isActive }) => 
+            <NavLink
+              to="/user/games"
+              className={({ isActive }) =>
                 `text-white hover:text-gray-200 transition-colors font-medium ${
                   isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
                 }`
@@ -46,10 +72,10 @@ const Navbar_user = () => {
             >
               All Game
             </NavLink>
-      
-            <NavLink 
-              to="/user/library" 
-              className={({ isActive }) => 
+
+            <NavLink
+              to={`/user/library/${userId}`} // ✅ ใช้ userId ตรงนี้
+              className={({ isActive }) =>
                 `text-white hover:text-gray-200 transition-colors font-medium ${
                   isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
                 }`
@@ -57,9 +83,10 @@ const Navbar_user = () => {
             >
               Library
             </NavLink>
-            <NavLink 
-              to="/user/notification" 
-              className={({ isActive }) => 
+
+            <NavLink
+              to="/user/notification"
+              className={({ isActive }) =>
                 `text-white hover:text-gray-200 transition-colors font-medium ${
                   isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
                 }`
@@ -68,9 +95,9 @@ const Navbar_user = () => {
               Notifications
             </NavLink>
 
-            <NavLink 
-              to="/user/help" 
-              className={({ isActive }) => 
+            <NavLink
+              to="/user/help"
+              className={({ isActive }) =>
                 `text-white hover:text-gray-200 transition-colors font-medium ${
                   isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
                 }`
@@ -78,11 +105,10 @@ const Navbar_user = () => {
             >
               Help
             </NavLink>
-        
 
-          <NavLink 
-              to="/user/gamepass" 
-              className={({ isActive }) => 
+            <NavLink
+              to="/user/gamepass"
+              className={({ isActive }) =>
                 `text-white hover:text-gray-200 transition-colors font-medium ${
                   isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
                 }`
@@ -94,23 +120,21 @@ const Navbar_user = () => {
 
           {/* Action Buttons */}
           <div className="flex items-center space-x-4">
-            <NavLink to="/user/profile" >
-            <button className="p-2 text-white hover:text-gray-200 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}>
-              <UserIcon className="h-6 w-6" />
-            </button>
+            <NavLink to="/user/profile">
+              <button
+                className="p-2 text-white hover:text-gray-200 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <UserIcon className="h-6 w-6" />
+              </button>
             </NavLink>
-            <NavLink
-              to="#"
+
+            <button
               onClick={handleLogout}
-              className={({ isActive }) =>
-                `text-white hover:text-gray-200 transition-colors font-medium ${
-                  isActive ? "border-b-2 border-white" : ""
-                }`
-              }
+              className="text-white hover:text-gray-200 transition-colors font-medium"
             >
-              logout
-            </NavLink>
+              Logout
+            </button>
           </div>
         </div>
       </div>

@@ -362,8 +362,8 @@ func getLibrary(c *gin.Context) {
     id := c.Param("id")
     var library Library
 
-    err := db.QueryRow("SELECT library_id, game_id, created_at FROM library WHERE library_id = $1", id).
-        Scan(&library.LibraryID, &library.GameID, &library.CreatedAt)
+    err := db.QueryRow("SELECT library_id, game_id,downloaded , created_at FROM library WHERE library_id = $1", id).
+        Scan(&library.LibraryID, &library.GameID, &library.Downloaded, &library.CreatedAt)
 
     if err == sql.ErrNoRows {
         c.JSON(http.StatusNotFound, gin.H{"error": "library not found"})

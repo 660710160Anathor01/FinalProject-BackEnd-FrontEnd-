@@ -1,7 +1,7 @@
 // components/AdminCard.jsx
 import { useNavigate } from "react-router-dom";
 
-export default function AdminCard({ id, name, subtitle, avatar }) {
+export default function AdminCard({ id, name, avatar }) {
   const navigate = useNavigate();
 
   return (

@@ -104,7 +104,7 @@ function App() {
               }
             />
             <Route
-              path="/user/library"
+              path="/user/library/:id"
               element={
                 <ProtectedRoute role="user">
                   <Library />

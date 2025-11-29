@@ -1,57 +1,57 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from '../../contexts/AuthContext';
+
 const Profile_Page = () => {
+  const { auth } = useAuth(); // auth ของ user ปัจจุบัน
+  const [userData, setUserData] = useState(null); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [userData, setUserData] = useState(null); // สำหรับเก็บข้อมูลผู้ใช้จาก API
-  const [loading, setLoading] = useState(true); // สถานะโหลด
-  const [error, setError] = useState(null); // เก็บ error ถ้ามี
-  const { auth } = useAuth();
-  const email = auth.email
   useEffect(() => {
-     const fetchData = async () => {
+    let mounted = true;
+
+    const fetchUsers = async () => {
       try {
-      const res  = await fetch(`http://localhost:8080/api/v1/applicants/profile?email=${encodeURIComponent(email)}`, {
-        method: "GET",
-        headers: {
-        "Content-Type": "application/json",
-      }
-    });
-        const hrRes = await res.json();
+        const res = await fetch(`http://127.0.0.1:8080/api/v1/users`);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const users = await res.json();
 
-          const firstName = hrRes?.applicant?.first_name || "";
-        const lastName = hrRes?.applicant?.last_name || "";
-        const fullName = (firstName + " " + lastName).trim() || "ไม่ทราบชื่อ";
+        // หา user ที่ email ตรงกับ auth.email
+        const matchedUser = users.find(user => user.email === auth.email);
+        if (!matchedUser) throw new Error("Unauthorized: Email not found");
 
+        if (mounted) {
           setUserData({
-            fullname: fullName,
-            phone: hrRes?.applicant?.phone || "",
-            email: hrRes?.applicant?.email || "",
-            position: hrRes?.application?.position || "ไม่ระบุตำแหน่ง",
-            status: hrRes?.application?.stage || "รอการพิจารณา",
-            avatar: hrRes?.applicant?.avatar || '/images/carwash/profile.png',
-          });    
+            user_name: matchedUser.user_name || "ไม่ทราบชื่อ",
+            email: matchedUser.email || "ไม่ระบุอีเมล",
+            phone: matchedUser.phone || "ไม่ระบุเบอร์",
+            payment_date: matchedUser.payment_date || "ไม่มีข้อมูล",
+            avatar: matchedUser.avatar || "/images/xbox/profile.png",
+          });
+        }
       } catch (err) {
-        setError(err.message);
+        if (mounted) setError(err.message);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
-  
-    fetchData();
+
+    fetchUsers();
+
+    return () => {
+      mounted = false;
+    };
   }, [auth.email]);
 
-  // ระหว่างโหลดข้อมูล
   if (loading) return <p className="text-center mt-20 text-gray-600">Loading...</p>;
   if (error) return <p className="text-center mt-20 text-red-600">Error: {error}</p>;
-
-  // ถ้าไม่มีข้อมูล
   if (!userData) return <p className="text-center mt-20 text-gray-600">No data available.</p>;
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-purple-600 to-purple-200">
+    <div className="flex justify-center items-center min-h-screen bg-[#2b3250] text-white">
       <div className="bg-white w-80 rounded-2xl shadow-lg overflow-hidden">
         {/* ส่วนหัว */}
-        <div className="bg-purple-600 h-32 relative">
+        <div className="bg-green-600 h-32 relative">
           <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
             <img
               src={userData.avatar}
@@ -63,12 +63,10 @@ const Profile_Page = () => {
 
         {/* ข้อมูลผู้ใช้ */}
         <div className="pt-16 pb-8 px-6 text-center">
-          <h2 className="text-lg font-bold text-gray-800 mb-4">
-            {userData.fullname}
-          </h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-4">{userData.user_name}</h2>
 
-          <div className="bg-gray-50 rounded-xl p-4 text-left shadow-sm">
-            <div className="mb-2">
+          <div className="bg-gray-50 rounded-xl p-4 text-left shadow-sm space-y-2">
+            <div>
               <p className="text-purple-600 text-sm font-semibold">Email</p>
               <p className="text-gray-800 font-medium">{userData.email}</p>
             </div>
@@ -76,27 +74,7 @@ const Profile_Page = () => {
               <p className="text-purple-600 text-sm font-semibold">Phone</p>
               <p className="text-gray-800 font-medium">{userData.phone}</p>
             </div>
-            <div>
-              <p className="text-purple-600 text-sm font-semibold">ตำแหน่งที่สมัคร</p>
-              <p className="text-gray-800 font-medium">{userData.position}</p>
-            </div>
           </div>
-          {/* สถานะ */}
-        <div
-          className={`inline-block px-4 py-2 rounded-full text-white text-sm font-medium ${
-            userData.status === "สมัครแล้ว"
-              ? "bg-yellow-500"
-              : userData.status === "นัดสัมภาษณ์"
-              ? "bg-yellow-500"
-              : userData.status === "ผ่านสัมภาษณ์"
-              ? "bg-green-500"
-              : userData.status === "รับเข้าทำงาน"
-              ? "bg-green-500"
-              : "bg-red-500"
-          }`}
-        >
-          {userData.status}
-        </div>
         </div>
       </div>
     </div>

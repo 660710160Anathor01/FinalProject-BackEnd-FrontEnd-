@@ -9,6 +9,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { setAuth } = useAuth();
 
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -41,14 +42,18 @@ const LoginPage = () => {
       }
 
       const data = await response.json();
+      console.log("Login response:", data);
       const role = data.role || "user"; // fallback role
+      const userId = data.user_id; // user_id จาก server
 
       localStorage.setItem("userEmail", form.email);
+      localStorage.setItem("userId", userId);
 
       setAuth({
         isLoggedIn: true,
         role: role,
         email: form.email,
+        id: userId
       });
 
       if (role === "hr") {

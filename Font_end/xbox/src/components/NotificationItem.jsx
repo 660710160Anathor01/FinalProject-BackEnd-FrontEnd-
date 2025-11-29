@@ -2,7 +2,7 @@ import React from "react";
 
 const NotificationItem = ({ id, title, message, onDelete }) => {
      return (
-       <div className="bg-gradient-to-r from-purple-800 to-purple-600 text-white p-4 rounded-lg shadow-md mb-4 flex justify-between items-start">
+       <div className="bg-green-600 text-white p-4 rounded-lg shadow-md mb-4 flex justify-between items-start">
          <div>
            <h2 className="text-xl font-semibold mb-2">{title}</h2>
            <p className="text-sm">{message}</p>

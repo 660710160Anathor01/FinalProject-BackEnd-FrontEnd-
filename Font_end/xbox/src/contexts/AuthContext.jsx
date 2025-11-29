@@ -4,9 +4,9 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
-    isLoggedIn: true,
-    role: "user", // หรือ 'hr'
-    email: ""
+    isLoggedIn: false,
+    role: "", // หรือ 'hr'
+    email: "",
   });
 
   return (
