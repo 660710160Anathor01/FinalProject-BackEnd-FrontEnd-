@@ -64,7 +64,7 @@ const Navbar_admin = () => {
                     }`
                   }
                 >
-              ออกจากระบบ
+              Logout
             </NavLink>
           </div>
         </div>

@@ -17,11 +17,7 @@ const AddGame = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
-  // ตรวจสอบ Login
-  useEffect(() => {
-    const auth = localStorage.getItem('isAdminAuthenticated');
-    if (!auth) navigate('/login');
-  }, [navigate]);
+  
 
   // handle input change
   const handleChange = (e) => {
@@ -64,7 +60,7 @@ const AddGame = () => {
           game_name: formData.game_name.trim(),
           game_type: formData.game_type.trim(),
           icon: formData.icon.trim(),
-          company_id: formData.company_id.trim()
+          company_id: Number(formData.company_id)
         })
       });
 
@@ -88,10 +84,6 @@ const AddGame = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('isAdminAuthenticated');
-    navigate('/login');
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -101,14 +93,9 @@ const AddGame = () => {
           <div className="flex items-center space-x-3">
             <BookOpenIcon className="h-8 w-8" />
             <h1 className="text-2xl font-bold">Game Admin</h1>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30"
-          >
-            ออกจากระบบ
-          </button>
-        </div>
+         </div>
+          
+        </div> 
       </header>
 
       {/* Main */}
