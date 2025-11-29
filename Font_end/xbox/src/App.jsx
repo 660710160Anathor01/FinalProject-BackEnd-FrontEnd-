@@ -181,7 +181,7 @@ function App() {
               path="/admin/games"
               element={
                 <ProtectedRoute role="admin">
-                  <HomePage_NotLog/>
+                  <Game_Manage/>
                 </ProtectedRoute>
               }
             />
