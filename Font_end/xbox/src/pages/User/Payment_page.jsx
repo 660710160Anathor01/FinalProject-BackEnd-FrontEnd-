@@ -1,0 +1,104 @@
+import { useEffect, useState } from "react";
+import { NavLink  } from 'react-router-dom';
+
+async function fetchPaymentData() {
+  // const res = await fetch("/api/payment");
+  // return await res.json();
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        id: 231546,
+        date: "11-03-2025",
+        productName: "Qbox's Game Pass",
+        duration: "1 เดือน",
+        price: 140,
+        qrImage: "https://play-lh.googleusercontent.com/Byl6BHzEv7tWDGa5QUgztneq8C8TGYelu8ywVMTTRUH2e9keboyLqL4YhmzaU3vjgA",
+      });
+    }, 300);
+  });
+}
+
+export default function Payment() {
+  const [payment, setPayment] = useState(null);
+  const [openBill, setOpenBill] = useState(false);
+
+  // ================================
+  // 📌 โหลดข้อมูลจาก database ตอนเปิดหน้า
+  // ================================
+  useEffect(() => {
+    fetchPaymentData().then((data) => setPayment(data));
+  }, []);
+
+  if (!payment) return <div className="text-center py-20">กำลังโหลดข้อมูล...</div>;
+
+  return (
+    <div className="min-h-screen bg-green-200 flex justify-center items-center p-6">
+      {/* Payment Box */}
+      <div className="bg-white shadow-xl rounded-xl p-6 w-full max-w-md text-center">
+        <h2 className="text-2xl font-bold mb-4">Payment</h2>
+
+        {/* QR Code */}
+        <div className="flex justify-center mb-3">
+          <img
+            src={payment.qrImage}
+            alt="QR Code"
+            className="w-48 h-48 rounded-lg border"
+          />
+        </div>
+
+        <p className="text-xl font-semibold mb-4">{payment.price} บาท</p>
+
+        {/* Buttons */}
+        <div className="space-y-3">
+          <button
+            onClick={() => setOpenBill(true)}
+            className="w-full bg-green-600 hover:bg-purple-700 text-white py-2 rounded-lg"
+          >
+            ยืนยันการสั่งซื้อ
+          </button>
+
+          <button className="w-full bg-gray-300 hover:bg-gray-400 text-black py-2 rounded-lg">
+            ยกเลิก
+          </button>
+        </div>
+      </div>
+
+      {/* ===================== BILL MODAL ===================== */}
+      {openBill && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md">
+            <p className="text-lg">
+              รหัสใบเสร็จ : {payment.id}
+            </p>
+            <p className="mt-2">
+              สั่งซื้อแล้วเมื่อวันที่ : {payment.date}
+            </p>
+            <p className="mt-2">
+              {payment.productName} – {payment.duration} : {payment.price} บาท
+            </p>
+
+            <p className="mt-4 font-bold text-xl">
+              รวมทั้งหมด {payment.price} บาท
+            </p>
+<NavLink
+                                   to="/user"
+                                   className={({ isActive }) =>
+                                        `text-white hover:text-gray-200 transition-colors font-medium ${isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
+                                        }`
+                                   }
+                              >
+                                   <button
+              onClick={() => setOpenBill(false)}
+              className="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg"
+            >
+              กลับไปหน้าหลัก
+            </button>
+                              </NavLink>
+            
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

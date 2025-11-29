@@ -33,25 +33,29 @@ const Navbar_user = () => {
                 }`
               }
             >
-              หน้าแรก
+              Home
             </NavLink>
-            <a
-              href="https://forms.gle/wmnEfp53B2jWsaaCA"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="form-link text-white hover:text-gray-200 transition-colors font-medium"
-            >
-              ทดสอบ
-            </a>
+
             <NavLink 
-              to="/user/status" 
+              to="/user/games" 
               className={({ isActive }) => 
                 `text-white hover:text-gray-200 transition-colors font-medium ${
                   isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
                 }`
               }
             >
-              ตรวจสอบสถานะ
+              All Game
+            </NavLink>
+      
+            <NavLink 
+              to="/user/library" 
+              className={({ isActive }) => 
+                `text-white hover:text-gray-200 transition-colors font-medium ${
+                  isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
+                }`
+              }
+            >
+              Library
             </NavLink>
             <NavLink 
               to="/user/notification" 
@@ -63,6 +67,18 @@ const Navbar_user = () => {
             >
               แจ้งเตือน
             </NavLink>
+
+            <NavLink 
+              to="/user/help" 
+              className={({ isActive }) => 
+                `text-white hover:text-gray-200 transition-colors font-medium ${
+                  isActive ? 'text-viridian-600 border-b-2 border-viridian-600' : ''
+                }`
+              }
+            >
+              Help
+            </NavLink>
+        
 
           <NavLink 
               to="/user/gamepass" 

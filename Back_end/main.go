@@ -458,7 +458,8 @@ func main(){
 	r := gin.Default()    
     
 
-  
+    //r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
     r.Use(cors.New(cors.Config{
        AllowOrigins:     []string{
         "http://127.0.0.1",       // 80
