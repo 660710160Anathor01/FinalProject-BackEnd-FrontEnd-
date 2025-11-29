@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 // Components
 import Navbar_user from './components/Navbar_user';
-import Navbar_hr from './components/Navbar_hr';
+import Navbar_admin from './components/Navbar_admin';
 import Navbar from './components/Navbar';
 
 // Pages
@@ -16,7 +16,6 @@ import Home from './pages/User/Home_page';
 //import HomePage from './pages/User/HomePage';
 import Profile_Page from './pages/User/Profile_Page';
 
-import Status_Page from './pages/User/Status_Page';
 import NotificationPage from './pages/User/Notification_Page';
 
 import GamePassPage from './pages/User/GamePassPage';
@@ -28,13 +27,8 @@ import Help from './pages/User/Help_page';
 import AdminProfile from './pages/User/AdminProfile_page';
 import BillTemplate from './pages/User/bill';
 
-// HR
-import HomePage_Hr_page from './pages/Hr/Home_Hr_page';
-import ApplicantList_Page from './pages/Hr/ApplicantList_Page';
-import ManageApplicant_Page from './pages/Hr/ManageApplicant_Page';
-import Document_Page from './pages/Hr/Document_Page';
-import Report_Page from './pages/Hr/Report_Page';
-import Profile_hr_Page from './pages/Hr/Profile_hr_Page';
+// admin
+
 
 import { useAuth } from './contexts/AuthContext'; // 👈 ย้อนขึ้นไปหา contexts
 
@@ -63,8 +57,8 @@ function App() {
         {/* แสดง Navbar ตาม role */}
         
         {auth.isLoggedIn === true ? (
-          auth.role === 'hr' ? (
-            <Navbar_hr />
+          auth.role === 'admin' ? (
+            <Navbar_admin />
             
           ) :  (
             <Navbar_user />
@@ -84,7 +78,7 @@ function App() {
             <Route
               path="/user"
               element={
-                <ProtectedRoute role="applicant">
+                <ProtectedRoute role="user">
                   <Home />
                 </ProtectedRoute>
               }
@@ -92,7 +86,7 @@ function App() {
             <Route
               path="/user/games"
               element={
-                <ProtectedRoute role="applicant">
+                <ProtectedRoute role="user">
                   <AllGame />
                 </ProtectedRoute>
               }
@@ -104,7 +98,7 @@ function App() {
             <Route
               path="/user/profile"
               element={
-                <ProtectedRoute role="applicant">
+                <ProtectedRoute role="user">
                   <Profile_Page />
                 </ProtectedRoute>
               }
@@ -112,7 +106,7 @@ function App() {
             <Route
               path="/user/library"
               element={
-                <ProtectedRoute role="applicant">
+                <ProtectedRoute role="user">
                   <Library />
                 </ProtectedRoute>
               }
@@ -120,7 +114,7 @@ function App() {
             <Route
               path="/user/help"
               element={
-                <ProtectedRoute role="applicant">
+                <ProtectedRoute role="user">
                   <Help />
                 </ProtectedRoute>
               }
@@ -130,7 +124,7 @@ function App() {
             <Route
               path="/user/notification"
               element={
-                <ProtectedRoute role="applicant">
+                <ProtectedRoute role="user">
                   <NotificationPage />
                 </ProtectedRoute>
               }
@@ -139,7 +133,7 @@ function App() {
             <Route
               path="/user/gamepass"
               element={
-                <ProtectedRoute role="applicant">
+                <ProtectedRoute role="user">
                   <GamePassPage />
                 </ProtectedRoute>
               }
@@ -148,7 +142,7 @@ function App() {
             <Route
               path="/user/payment"
               element={
-                <ProtectedRoute role="applicant">
+                <ProtectedRoute role="user">
                   <Payment />
                 </ProtectedRoute>
               }
@@ -157,7 +151,7 @@ function App() {
             <Route
               path="/user/bill"
               element={
-                <ProtectedRoute role="applicant">
+                <ProtectedRoute role="user">
                   <BillTemplate />
                 </ProtectedRoute>
               }
@@ -165,50 +159,10 @@ function App() {
 
             {/* หน้า hr */}
             <Route
-              path="/hr"
+              path="/admin"
               element={
-                <ProtectedRoute role="hr">
-                  <HomePage_Hr_page />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/hr/profile"
-              element={
-                <ProtectedRoute role="hr">
-                  <Profile_hr_Page />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/hr/applicant"
-              element={
-                <ProtectedRoute role="hr">
-                  <ApplicantList_Page />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/manage/:id"
-              element={
-                <ProtectedRoute role="hr">
-                  <ManageApplicant_Page />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/hr/document"
-              element={
-                <ProtectedRoute role="hr">
-                  <Document_Page />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/hr/report"
-              element={
-                <ProtectedRoute role="hr">
-                  <Report_Page />
+                <ProtectedRoute role="admin">
+                  
                 </ProtectedRoute>
               }
             />

@@ -3,7 +3,7 @@ import { Link, NavLink,useNavigate } from 'react-router-dom';
 import { ShoppingCartIcon, SearchIcon, UserIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import { useAuth } from '../contexts/AuthContext';
 
-const Navbar_hr = () => {
+const Navbar_admin = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount] = useState(3);
 
@@ -93,4 +93,4 @@ const Navbar_hr = () => {
   );
 };
 
-export default Navbar_hr;
+export default Navbar_admin;
