@@ -9,7 +9,7 @@ CREATE TABLE company (
 
 -- Table: game
 CREATE TABLE game (
-    game_id         SERIAL PRIMARY KEY,
+    game_id         VARCHAR(255) PRIMARY KEY,
     game_name       VARCHAR(255) NOT NULL,
     game_type       VARCHAR(255),
     icon            VARCHAR(255),
@@ -22,11 +22,11 @@ CREATE TABLE game (
 
 -- Table: library
 CREATE TABLE library (
-    library_id       SERIAL PRIMARY KEY,
-    game_id         INT NOT NULL,
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    library_id      SERIAL PRIMARY KEY,
+    game_id         VARCHAR(1000),
+    downloaded      VARCHAR(1000),
+    created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 
-    FOREIGN KEY (game_id) REFERENCES game(game_id) ON DELETE CASCADE
 );
 
 
@@ -78,13 +78,13 @@ INSERT INTO company (company_name, company_email) VALUES
     ('xgo','xgo@gmail.com'),
     ('zgo','zgo@gmail.com');
 
-INSERT INTO game (game_name, game_type, icon, company_id) VALUES
-    ('AAA','fps, co-op', 'http', 1),
-    ('Biohazee','fps, horror', 'http', 1);
+INSERT INTO game (game_id, game_name, game_type, icon, company_id) VALUES
+    ('1','AAA','fps, co-op', 'http', 1),
+    ('2','Biohazee','fps, horror', 'http', 1);
 
-INSERT INTO library (game_id) VALUES
-    (1),
-    (1);
+INSERT INTO library (game_id, downloaded) VALUES
+    ('1','2'),
+    ('1-2','1');
 
 INSERT INTO app_user (user_name, email, password, payment_date, library_id, phone) VALUES
     ('chai','somchai@gmail.com','123', '2025-03-15' , 1,'321321'),

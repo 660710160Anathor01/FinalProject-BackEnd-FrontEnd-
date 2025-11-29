@@ -69,9 +69,6 @@ type Bill struct {
     CreatedAt 	    time.Time 	`json:"created_at"`
 }
 
-type ErrorResponse struct {
-    Error string `json:"error"`
-}
 
 
 func getEnv(key, defaultValue string) string{
@@ -228,6 +225,41 @@ func getGame(c *gin.Context) {
     c.JSON(http.StatusOK, game)
 }
 
+func getCompany(c *gin.Context) {
+    id := c.Param("id")
+    var company Company
+
+    err := db.QueryRow("SELECT company_id, company_name, email FROM company WHERE company_id = $1", id).
+        Scan(&company.CompanyID, &company.CompanyName, &company.Email)
+
+    if err == sql.ErrNoRows {
+        c.JSON(http.StatusNotFound, gin.H{"error": "company not found"})
+        return
+    } else if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, company)
+}
+
+func getBill(c *gin.Context) {
+    id := c.Param("id")
+    var bill Bill
+
+    err := db.QueryRow("SELECT bill_id, user_id, price, created_at FROM company WHERE company_id = $1", id).
+        Scan(&bill.BillID, &bill.UserID, &bill.Price, &bill.CreatedAt)
+
+    if err == sql.ErrNoRows {
+        c.JSON(http.StatusNotFound, gin.H{"error": "bill not found"})
+        return
+    } else if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, bill)
+}
 
 func getLibrary(c *gin.Context) {
     id := c.Param("id")
@@ -426,8 +458,7 @@ func main(){
 	r := gin.Default()    
     
 
-    r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
+  
     r.Use(cors.New(cors.Config{
        AllowOrigins:     []string{
         "http://127.0.0.1",       // 80
@@ -459,6 +490,9 @@ func main(){
 	 	api.GET("/user/:id", getAppUser)
 	 	api.POST("/user", createAppUser)
 	 	api.PUT("/user/:id", updateAppUserInfo)
+
+        api.GET("/company/:id", getCompany)
+        api.GET("/bill/:id", getBill)
         //api.POST("/user/auth", getAppUserAuthen)
 	 	//api.DELETE("/user/:id", deleteApplicant)
         //api.GET("/user/profile", getApplicantProfile)
