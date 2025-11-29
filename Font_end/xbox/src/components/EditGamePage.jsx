@@ -29,7 +29,7 @@ const EditGamePage = () => {
   useEffect(() => {
     const loadGame = async () => {
       try {
-        const res = await fetch(`/api/v1/games/${id}`);
+        const res = await fetch(`/api/v1/game/${id}`);
         if (!res.ok) throw new Error("ไม่พบข้อมูลเกม");
 
         const data = await res.json();
@@ -80,7 +80,7 @@ const EditGamePage = () => {
     setSuccessMessage('');
 
     try {
-      const res = await fetch(`/api/v1/games/${id}`, {
+      const res = await fetch(`/api/v1/game/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
