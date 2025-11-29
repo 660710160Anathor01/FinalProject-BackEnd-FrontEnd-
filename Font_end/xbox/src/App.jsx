@@ -24,6 +24,8 @@ import Payment from './pages/User/Payment_page';
 import AllGame from './pages/User/AllGame_page';
 import Library from './pages/User/Library_page';
 import GameDetail from './pages/User/GameDetail';
+import Help from './pages/User/Help_page';
+import AdminProfile from './pages/User/AdminProfile_page';
 
 // HR
 import HomePage_Hr_page from './pages/Hr/Home_Hr_page';
@@ -113,6 +115,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/user/help"
+              element={
+                <ProtectedRoute role="applicant">
+                  <Help />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/admin/:id" element={<AdminProfile />} />
+            
             <Route
               path="/user/notification"
               element={
