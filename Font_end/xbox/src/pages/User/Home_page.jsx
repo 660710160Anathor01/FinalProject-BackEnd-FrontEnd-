@@ -28,10 +28,10 @@ export default function Home() {
   const filteredByCategory =
     selectedCategory === "All"
       ? games
-      : games.filter((game) => game.category === selectedCategory);
+      : games.filter((game) => game.game_type === selectedCategory);
 
   const filteredGames = filteredByCategory.filter((game) =>
-    (game.title || '').toLowerCase().includes(search.toLowerCase())
+    (game.game_name || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
