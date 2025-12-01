@@ -23,7 +23,7 @@ export default function AllGame() {
   }, []);
 
   const filteredGames = games.filter((game) =>
-    (game.title || '').toLowerCase().includes(search.toLowerCase())
+    (game.game_name || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
